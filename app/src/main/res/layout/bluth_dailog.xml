@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mapbar.scale.ScaleRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/boluthListLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone">
+
+    <com.mapbar.scale.ScaleLinearLayout
+        android:id="@+id/boluthListUpdataLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="#FFD700"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.mapbar.scale.ScaleImageView
+            android:id="@+id/bluthUpdata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:src="@mipmap/bluthupdata" />
+
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/bluthUpdataStr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="刷新"
+            android:textColor="@color/baseColor"
+            android:textSize="26dp" />
+
+    </com.mapbar.scale.ScaleLinearLayout>
+
+    <ListView
+        android:id="@+id/boluthList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/boluthListUpdataLayout"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@android:color/white"
+        android:divider="#07923A"
+        android:dividerHeight="1dp"
+        android:listSelector="@null" />
+</com.mapbar.scale.ScaleRelativeLayout>
