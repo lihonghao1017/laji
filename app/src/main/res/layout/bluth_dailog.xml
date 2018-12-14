@@ -3,43 +3,60 @@
     android:id="@+id/boluthListLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="gone">
+    >
 
-    <com.mapbar.scale.ScaleLinearLayout
-        android:id="@+id/boluthListUpdataLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="#FFD700"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <com.mapbar.scale.ScaleImageView
-            android:id="@+id/bluthUpdata"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="12dp"
-            android:src="@mipmap/bluthupdata" />
-
-        <com.mapbar.scale.ScaleTextView
-            android:id="@+id/bluthUpdataStr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="刷新"
-            android:textColor="@color/baseColor"
-            android:textSize="26dp" />
-
-    </com.mapbar.scale.ScaleLinearLayout>
-
-    <ListView
-        android:id="@+id/boluthList"
+    <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/boluthListUpdataLayout"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:background="@android:color/white"
-        android:divider="#07923A"
-        android:dividerHeight="1dp"
-        android:listSelector="@null" />
+        android:alpha="0.4"
+        android:background="#000000" />
+
+    <com.mapbar.scale.ScaleRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="150dp"
+        android:layout_marginRight="40dp"
+        android:background="@android:color/white">
+
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/bluthtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:text="选择蓝牙"
+            android:textColor="#C3C3C3"
+            android:textSize="26dp" />
+
+        <ListView
+            android:id="@+id/boluthList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/bluthtitle"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="40dp"
+            android:scrollbars="none"
+            android:background="@android:color/white"
+            android:divider="#CFCFCF"
+            android:dividerHeight="1dp"
+            android:listSelector="@null"
+            />
+
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/bluthClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:paddingLeft="40dp"
+            android:paddingTop="20dp"
+            android:paddingRight="40dp"
+            android:paddingBottom="20dp"
+            android:text="关闭"
+            android:textColor="#4DA9E8"
+            android:textSize="26dp" />
+    </com.mapbar.scale.ScaleRelativeLayout>
 </com.mapbar.scale.ScaleRelativeLayout>
