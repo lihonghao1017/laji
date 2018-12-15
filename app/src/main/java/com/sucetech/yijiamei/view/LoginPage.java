@@ -1,134 +1,146 @@
 package com.sucetech.yijiamei.view;
 
 import android.content.Context;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 
 import com.mapbar.android.model.ActivityInterface;
 import com.mapbar.android.model.BasePage;
-import com.mapbar.android.model.FilterObj;
-import com.mapbar.android.model.Log;
-import com.mapbar.android.model.PageRestoreData;
 import com.sucetech.yijiamei.Configs;
+import com.sucetech.yijiamei.MainActivity;
 import com.sucetech.yijiamei.R;
+import com.sucetech.yijiamei.UserMsg;
+import com.sucetech.yijiamei.provider.TaskManager;
 
-public class LoginPage extends BasePage implements OnClickListener
-{
-	private final static String TAG = "LoginPage";
-//	private Context mContext;
-	private ActivityInterface mAif;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-	public LoginPage(Context context, View view, ActivityInterface aif)
-	{
-		super(context, view, aif);
-		
-//		mContext = context;
-		mAif = aif;
-		
-		View btn_show_tow = view.findViewById(R.id.btn_show_tow);
-		btn_show_tow.setOnClickListener(this);
-	}
+import java.io.IOException;
 
-	@Override
-	public void setFilterObj(int flag, FilterObj filter)
-	{
-		super.setFilterObj(flag, filter);
-	}
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
-	@Override
-	public void viewWillAppear(int flag)
-	{
-		super.viewWillAppear(flag);
-		Log.e(TAG, TAG+"=>viewWillAppear");
-	}
-	
-	private boolean isFinishedInit = false;
+public class LoginPage extends BasePage implements OnClickListener {
+    private final static String TAG = "LoginPage";
+    private ActivityInterface mAif;
+    private EditText username, pwd;
+    private View commit, pwdEyeIcon;
+    private Context context;
 
-	@Override
-	public void viewDidAppear(int flag)
-	{
-		super.viewDidAppear(flag);
-		Log.e(TAG, TAG+"=>viewDidAppear");
-		
-		if(isFinishedInit)
-			return;
-		isFinishedInit = true;
-	}
 
-	@Override
-	public void viewWillDisappear(int flag)
-	{
-		super.viewWillDisappear(flag);
-		Log.e(TAG, TAG+"=>viewWillDisappear");
-	}
+    public LoginPage(Context context, View view, ActivityInterface aif) {
+        super(context, view, aif);
+        this.context=context;
+        this.mAif=aif;
+        username = view.findViewById(R.id.username);
+        pwd = view.findViewById(R.id.pwd);
+        commit = view.findViewById(R.id.commit);
+        commit.setOnClickListener(this);
+        pwdEyeIcon = view.findViewById(R.id.pwdEyeIcon);
+        pwdEyeIcon.setOnClickListener(this);
+        username.setText(UserMsg.getUserName());
+        pwd.setText(UserMsg.getPwd());
+        mAif = aif;
+    }
+    @Override
+    public int getMyViewPosition() {
+        return Configs.VIEW_POSITION_Login;
+    }
 
-	@Override
-	public void viewDidDisappear(int flag)
-	{
-		super.viewDidDisappear(flag);
-		Log.e(TAG, TAG+"=>viewDidDisappear");
-	}
+    @Override
+    public void goBack() {
+        mAif.showPrevious(null);
+    }
 
-	@Override
-	public int getMyViewPosition()
-	{
-		return Configs.VIEW_POSITION_Login;
-	}
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        goBack();
+        return true;
+    }
 
-	@Override
-	public void goBack()
-	{
-		mAif.showPrevious(null);
-	}
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.commit) {
+//            ((MainActivity) getContext()).showProgressDailogView("登陆中...");
+            UserMsg.saveUserName(username.getText().toString());
+            UserMsg.savePwd(pwd.getText().toString());
+//            if (baseUrl.getText() != null && !baseUrl.getText().toString().equals("") && baseUrl.getText().toString().contains("http://")) {
+//                Configs.baseUrl = baseUrl.getText().toString();
+//            }
+            TaskManager.getInstance().addTask(new Runnable() {
+                @Override
+                public void run() {
+                    requestLoing2();
+                }
+            });
+        } else if (v.getId() == R.id.pwdEyeIcon) {
+            pwdEyeIcon.setSelected(!pwdEyeIcon.isSelected());
+            if (pwdEyeIcon.isSelected()) {
+                pwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            } else {
+                pwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        }
+    }
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private String requestLoing2() {
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		goBack();
-		return true;
-	}
-	
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-	}
-	
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		Log.e(TAG, TAG+"=>onDestroy");
-	}
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", UserMsg.getUserName());
+            jsonObject.put("password", UserMsg.getPwd());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(JSON, String.valueOf(jsonObject));
+        Request request = new Request.Builder()
+                .url(Configs.baseUrl+"/api/v1/yijiamei/login")
+                .post(body)
+                .build();
+        try {
+            final Response response = ((MainActivity)context).client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                UserMsg.saveToken(response.header("Authorization"));
+                loginSucced();
+//                requestYiyuan();
+//                this.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ((MainActivity)getContext()).hideProgressDailogView();
+//                        mEventManager.notifyObservers(EventStatus.logined,null);
+//                        LoginView.this.setVisibility(View.GONE);
+////                        mEventManager.notifyObservers(EventStatus.logined,null);
+//                        Toast.makeText(getContext(),"chengong -->",Toast.LENGTH_LONG);
+//                    }
+//                });
+//
+                return response.body().string();
+            } else {
+                android.util.Log.e("LLL", "shibai--->");
 
-	@Override
-	public void onRestart()
-	{
-		super.onRestart();
-	}
+//                loginFail();
+//                Toast.makeText(getContext(),"shibai -->"+response.message(),Toast.LENGTH_LONG);
+                throw new IOException("Unexpected code " + response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+//            loginFail();
+        }
+        return null;
+    }
+    private void loginSucced(){
+        username.post(new Runnable() {
+            @Override
+            public void run() {
+                mAif.showPage(getMyViewPosition(),Configs.VIEW_POSITION_Main,null);
+            }
+        });
 
-	@Override
-	public PageRestoreData getRestoreData()
-	{
-		return null;
-	}
-
-	@Override
-	public void onRestoreData(PageRestoreData data)
-	{
-		super.onRestoreData(data);
-	}
-
-	@Override
-	public void onPerformAction()
-	{
-		super.onPerformAction();
-	}
-
-	@Override
-	public void onClick(View v)
-	{
-		mAif.showPage(this.getMyViewPosition(), Configs.VIEW_POSITION_TWO, null);
-	}
+    }
 }

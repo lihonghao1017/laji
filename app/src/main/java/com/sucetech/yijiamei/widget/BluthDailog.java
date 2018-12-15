@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.graphics.Point;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -22,6 +23,7 @@ import com.sucetech.yijiamei.MainActivity;
 import com.sucetech.yijiamei.R;
 import com.sucetech.yijiamei.adapter.BluthAdapter;
 import com.sucetech.yijiamei.model.BluetoothDeviceBean;
+import com.sucetech.yijiamei.view.HomePage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class BluthDailog extends Dialog implements View.OnClickListener ,AdapterView.OnItemClickListener {
+public class BluthDailog extends Dialog implements View.OnClickListener, AdapterView.OnItemClickListener {
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothDevice device;
     private List<BluetoothDeviceBean> bluetoothDeviceList;
@@ -37,14 +39,18 @@ public class BluthDailog extends Dialog implements View.OnClickListener ,Adapter
     private BluthAdapter bluthAdapter;
     private BluetoothReceiver mBluetoothReceiver;
     private Context context;
+    private HomePage homePage;
+    private View close;
 
-    public BluthDailog(Context context) {
+    public BluthDailog(Context context, HomePage homePage) {
         super(context, R.style.BottomDialog);
-        this.context=context;
+        this.context = context;
+        this.homePage = homePage;
         View view = LayoutInflater.from(context).inflate(R.layout.bluth_dailog, null);
-        listView=view.findViewById(R.id.boluthList);
-        view.findViewById(R.id.bluthClose).setOnClickListener(this);
-
+        listView = view.findViewById(R.id.boluthList);
+        close = view.findViewById(R.id.bluthClose);
+        close.setOnClickListener(this);
+        close.setVisibility(View.GONE);
         setContentView(view);
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -54,26 +60,27 @@ public class BluthDailog extends Dialog implements View.OnClickListener ,Adapter
 
         Window window = getWindow();
         WindowManager.LayoutParams layoutParams = window.getAttributes(); //获取当前对话框的参数值
-        layoutParams.width = (int) (point.x ); //宽度设置为屏幕宽度的0.5
-        layoutParams.height = (int) (point.y ); //高度设置为屏幕高度的0.5
+        layoutParams.width = (int) (point.x); //宽度设置为屏幕宽度的0.5
+        layoutParams.height = (int) (point.y); //高度设置为屏幕高度的0.5
 //        layoutParams.width = (int) (display.getWidth() * 0.5);
 //        layoutParams.height = (int) (display.getHeight() * 0.5);
         window.setAttributes(layoutParams);
         bluetoothDeviceList = new ArrayList<>();
-        bluthAdapter=new BluthAdapter(context,bluetoothDeviceList);
+        bluthAdapter = new BluthAdapter(context, bluetoothDeviceList);
         listView.setAdapter(bluthAdapter);
         listView.setOnItemClickListener(this);
 //        initdata();
         findBluthDevice();
     }
-    private void initdata(){
+
+    private void initdata() {
         bluetoothDeviceList.clear();
         Set<BluetoothDevice> devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
         if (devices.size() > 0) {
             for (BluetoothDevice device : devices) {
-                BluetoothDeviceBean bluetoothDeviceBean=new BluetoothDeviceBean();
-                bluetoothDeviceBean.bluetoothDevice=device;
-                bluetoothDeviceBean.status=0;
+                BluetoothDeviceBean bluetoothDeviceBean = new BluetoothDeviceBean();
+                bluetoothDeviceBean.bluetoothDevice = device;
+                bluetoothDeviceBean.status = 0;
                 bluetoothDeviceList.add(bluetoothDeviceBean);
             }
             bluthAdapter.notifyDataSetChanged();
@@ -82,7 +89,7 @@ public class BluthDailog extends Dialog implements View.OnClickListener ,Adapter
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.bluthClose:
                 this.dismiss();
                 break;
@@ -98,6 +105,10 @@ public class BluthDailog extends Dialog implements View.OnClickListener ,Adapter
             mBluetoothAdapter.startDiscovery();
         }
 
+    }
+    @Override
+    public boolean onKeyDown(int keyCode,  KeyEvent event) {
+        return true;
     }
 
     private void registerBluthBroadCast() {
@@ -116,21 +127,38 @@ public class BluthDailog extends Dialog implements View.OnClickListener ,Adapter
         Boolean returnValue = (Boolean) createBondMethod.invoke(btDevice);
         return returnValue.booleanValue();
     }
-    public void startBlouth(String blouth) {
-//        ((MainActivity) getContext()).showProgressDailogView("蓝牙链接中...");
-//        this.setVisibility(View.VISIBLE);
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter == null) {
-            Toast.makeText(getContext(), "此设备不支持蓝牙", Toast.LENGTH_SHORT).show();
-//            ((MainActivity) getContext()).hideProgressDailogView();
-            return;
-        }
-//        connectBluth(blouth);
-    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        bluetoothDeviceList.get(position).status=1;
+        for (int i = 0; i < bluetoothDeviceList.size(); i++) {
+            if (bluetoothDeviceList.get(i).status == 1) {
+                Toast.makeText(context, "链接中请稍后...", Toast.LENGTH_LONG).show();
+         return;
+            }
+        }
+        bluetoothDeviceList.get(position).status = 1;
         bluthAdapter.notifyDataSetChanged();
+        homePage.bluthConnectTool.startBlouth(bluetoothDeviceList.get(position).bluetoothDevice.getAddress());
+    }
+
+    public void setBluthConFailed(String mac) {
+        for (int i = 0; i < bluetoothDeviceList.size(); i++) {
+            if (bluetoothDeviceList.get(i).bluetoothDevice.getAddress().equals(mac)) {
+                bluetoothDeviceList.get(i).status = 0;
+            }
+        }
+        bluthAdapter.notifyDataSetChanged();
+    }
+
+    public void setBluthConOk(String mac) {
+        for (int i = 0; i < bluetoothDeviceList.size(); i++) {
+            if (bluetoothDeviceList.get(i).bluetoothDevice.getAddress().equals(mac)) {
+                bluetoothDeviceList.get(i).status = 2;
+            }
+        }
+        bluthAdapter.notifyDataSetChanged();
+        close.setVisibility(View.VISIBLE);
+        this.dismiss();
     }
 
     class BluetoothReceiver extends BroadcastReceiver {
@@ -141,22 +169,22 @@ public class BluthDailog extends Dialog implements View.OnClickListener ,Adapter
             Log.e("action1=", action);
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {  //发现设备
                 BluetoothDevice btDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (btDevice.getName()!=null&&!btDevice.getName().equals("")){
-                    BluetoothDeviceBean bluetoothDeviceBean =new BluetoothDeviceBean();
-                    bluetoothDeviceBean.bluetoothDevice=btDevice;
-                    bluetoothDeviceBean.status=0;
+                if (btDevice.getName() != null && !btDevice.getName().equals("")) {
+                    BluetoothDeviceBean bluetoothDeviceBean = new BluetoothDeviceBean();
+                    bluetoothDeviceBean.bluetoothDevice = btDevice;
+                    bluetoothDeviceBean.status = 0;
                     bluetoothDeviceList.add(bluetoothDeviceBean);
                     bluthAdapter.notifyDataSetChanged();
                 }
-            }else if(BluetoothDevice.ACTION_CLASS_CHANGED .equals(action)){
+            } else if (BluetoothDevice.ACTION_CLASS_CHANGED.equals(action)) {
                 Toast.makeText(getContext(), "ACTION_CLASS_CHANGED", Toast.LENGTH_SHORT).show();
                 BluetoothDevice btDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 //                startBlouth(btDevice.getAddress());
-            }else if(BluetoothDevice.ACTION_PAIRING_REQUEST.equals(action)){
+            } else if (BluetoothDevice.ACTION_PAIRING_REQUEST.equals(action)) {
                 BluetoothDevice btDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 try {
-                    Method setPairingConfirmation = btDevice.getClass().getDeclaredMethod("setPairingConfirmation",boolean.class);
-                    setPairingConfirmation.invoke(btDevice,true);
+                    Method setPairingConfirmation = btDevice.getClass().getDeclaredMethod("setPairingConfirmation", boolean.class);
+                    setPairingConfirmation.invoke(btDevice, true);
                     abortBroadcast();//如果没有将广播终止，则会出现一个一闪而过的配对框。
                     Method removeBondMethod = btDevice.getClass().getDeclaredMethod("setPin",
                             new Class[]

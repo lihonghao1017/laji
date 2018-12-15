@@ -3,6 +3,7 @@ package  com.sucetech.yijiamei;
 
 public class Configs
 {
+	public static  String baseUrl="http://www.yijiamei.net";
 	public final static boolean isDebug = false;
 	
 	public final static String SOFT_VERSION = "1.0.0";

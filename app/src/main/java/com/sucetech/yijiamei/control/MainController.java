@@ -10,6 +10,7 @@ import com.mapbar.android.model.PageObject;
 import com.sucetech.yijiamei.Configs;
 import com.sucetech.yijiamei.R;
 import com.sucetech.yijiamei.view.HomePage;
+import com.sucetech.yijiamei.view.LoginPage;
 
 
 public class MainController
@@ -61,7 +62,7 @@ public class MainController
 		View launcher_main = this.mBaseActivity.findViewById(R.id.home_main);
 
 		PageObject mainPage = new PageObject(Configs.VIEW_POSITION_Main,
-				launcher_main, new HomePage(this.mBaseActivity, launcher_main,
+				launcher_main, new LoginPage(this.mBaseActivity, launcher_main,
 				this.mBaseActivity));
 		this.mBaseActivity.pushPage(mainPage, Configs.VIEW_FLAG_NONE, null);
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_container"
-    android:layout_width="match_parent" 
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 	<com.mapbar.android.widget.MViewAnimator
 		android:id="@+id/animator"
@@ -9,6 +8,6 @@
 	    android:layout_height="fill_parent"
 	    android:clickable="true"
 	   	android:background="#ffffffff">
-	    <include layout="@layout/layout_home" />
+	    <include layout="@layout/layout_login" />
 	</com.mapbar.android.widget.MViewAnimator>
 </RelativeLayout>

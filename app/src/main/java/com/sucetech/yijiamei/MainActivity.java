@@ -21,6 +21,10 @@ import com.mapbar.android.model.PageObject;
 import com.mapbar.android.model.VersionInfo;
 import com.sucetech.yijiamei.control.MainController;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+
 public class MainActivity extends AppActivity {
     private final static String TAG = "MainActivity";
 
@@ -31,6 +35,7 @@ public class MainActivity extends AppActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showContacts();
+        UserMsg.initUserMsg(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 //		long time = System.currentTimeMillis();
         setContentView(R.layout.layout_main);
@@ -43,6 +48,9 @@ public class MainActivity extends AppActivity {
         mMainController = new MainController(this);
 //		Log.e(TAG, TAG+":onCreate->time="+(System.currentTimeMillis()-time));
     }
+    public final OkHttpClient client = new OkHttpClient().newBuilder()
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .build();
 
     public void showContacts() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)

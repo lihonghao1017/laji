@@ -1,6 +1,5 @@
 package com.sucetech.yijiamei.adapter;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +8,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.sucetech.yijiamei.R;
-import com.sucetech.yijiamei.model.BluetoothDeviceBean;
+import com.sucetech.yijiamei.model.XiaoQuBean;
 
 import java.util.List;
 
-public class BluthAdapter extends BaseAdapter {
-    private List<BluetoothDeviceBean> deviceList;
+public class XiaoQuAdapter extends BaseAdapter {
+    private List<XiaoQuBean> deviceList;
     private LayoutInflater inflater;
 
-    public BluthAdapter(Context context, List<BluetoothDeviceBean> deviceList){
+    public XiaoQuAdapter(Context context, List<XiaoQuBean> deviceList){
         inflater=LayoutInflater.from(context);
         this.deviceList=deviceList;
     }
@@ -41,7 +40,7 @@ public class BluthAdapter extends BaseAdapter {
         ViewHolder holder = null;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.bluth_item_layout, null);
+            convertView = inflater.inflate(R.layout.xiaoqu_item_layout, null);
             holder.name = (TextView) convertView.findViewById(R.id.text1);
             holder.statuStr = (TextView) convertView.findViewById(R.id.tatus);
 
@@ -49,15 +48,7 @@ public class BluthAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.name.setText(deviceList.get(position).bluetoothDevice.getName() );
-        if (deviceList.get(position).status==1){
-            holder.statuStr.setText("连接中...");
-        }else  if (deviceList.get(position).status==0){
-            holder.statuStr.setText("连接失败");
-        }else  if (deviceList.get(position).status==0){
-            holder.statuStr.setText("连接成功");
-        }
-//        deviceList.get(position).getBondState()
+        holder.name.setText(deviceList.get(position).name );
         return convertView;
     }
     class ViewHolder{
