@@ -1,12 +1,22 @@
 package com.sucetech.yijiamei;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,7 +30,12 @@ import com.mapbar.android.model.OnDialogListener;
 import com.mapbar.android.model.PageObject;
 import com.mapbar.android.model.VersionInfo;
 import com.sucetech.yijiamei.control.MainController;
+import com.sucetech.yijiamei.model.FormImage;
+import com.sucetech.yijiamei.provider.BitmapUtils;
+import com.sucetech.yijiamei.provider.PhotoUtils;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -29,12 +44,14 @@ public class MainActivity extends AppActivity {
     private final static String TAG = "MainActivity";
 
     private MainController mMainController;
+    public NfcAdapter mNfcAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showContacts();
+        getPersimmions();
         UserMsg.initUserMsg(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 //		long time = System.currentTimeMillis();
@@ -47,11 +64,72 @@ public class MainActivity extends AppActivity {
 
         mMainController = new MainController(this);
 //		Log.e(TAG, TAG+":onCreate->time="+(System.currentTimeMillis()-time));
+
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (!ifNFCUse(this)) {
+            return;
+        }
+    }
+    protected Boolean ifNFCUse(Context context) {
+        if (mNfcAdapter == null) {
+            Toast.makeText(context, "设备不支持NFC！", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (mNfcAdapter != null && !mNfcAdapter.isEnabled()) {
+            Toast.makeText(context, "请在系统设置中先启用NFC功能！", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
     public final OkHttpClient client = new OkHttpClient().newBuilder()
             .connectTimeout(20, TimeUnit.SECONDS)
             .build();
+    private String permissionInfo;
+    private void getPersimmions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ArrayList<String> permissions = new ArrayList<String>();
+            /***
+             * 定位权限为必须权限，用户如果禁止，则每次进入都会申请
+             */
+            // 定位精确位置
+            if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+            if(checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            }
+            /*
+             * 读写权限和电话状态权限非必要权限(建议授予)只会申请一次，用户同意或者禁止，只会弹一次
+             */
+            // 读写权限
+            if (addPermission(permissions, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                permissionInfo += "Manifest.permission.WRITE_EXTERNAL_STORAGE Deny \n";
+            }
+            // 读取电话状态权限
+            if (addPermission(permissions, Manifest.permission.READ_PHONE_STATE)) {
+                permissionInfo += "Manifest.permission.READ_PHONE_STATE Deny \n";
+            }
 
+            if (permissions.size() > 0) {
+                requestPermissions(permissions.toArray(new String[permissions.size()]), 777);
+            }
+        }
+    }
+
+    @TargetApi(23)
+    private boolean addPermission(ArrayList<String> permissionsList, String permission) {
+        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) { // 如果应用没有获得对应权限,则添加到列表中,准备批量申请
+            if (shouldShowRequestPermissionRationale(permission)){
+                return true;
+            }else{
+                permissionsList.add(permission);
+                return false;
+            }
+
+        }else{
+            return true;
+        }
+    }
     public void showContacts() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
@@ -114,7 +192,12 @@ public class MainActivity extends AppActivity {
         return Configs.VIEW_FLAG_NONE;
     }
 
-
+    @Override
+    public void onNewIntent(Intent intent) {
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+            sendToPage(Configs.VIEW_POSITION_Main,Configs.VIEW_POSITION_Main,intent);
+        }
+    }
     /**
      * 正常的Activity onResume，
      * 不在此处做任何初始化工作
@@ -124,7 +207,19 @@ public class MainActivity extends AppActivity {
     @Override
     public void onResume() {
         mMainController.onResume();
+        if (mNfcAdapter != null)
+            mNfcAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
+
         super.onResume();
+    }
+    private PendingIntent mPendingIntent;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //此处adapter需要重新获取，否则无法获取message
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        //一旦截获NFC消息，就会通过PendingIntent调用窗口
+        mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()), 0);
     }
 
     /**
@@ -133,7 +228,60 @@ public class MainActivity extends AppActivity {
     @Override
     protected void onPause() {
         mMainController.onPause();
+        if (mNfcAdapter != null)
+            mNfcAdapter.disableForegroundDispatch(this);
         super.onPause();
+    }
+    private int id;
+    private static final int CODE_CAMERA_REQUEST = 0xa1;
+    private File fileUri;
+    private Uri imageUri;
+    public void requestPicture(int id) {
+        this.id = id;
+        if (hasSdcard()) {
+            fileUri = creatFile();
+            imageUri = Uri.fromFile(fileUri);
+            //通过FileProvider创建一个content类型的Uri
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                imageUri = FileProvider.getUriForFile(MainActivity.this, "com.sucetech.yijiamei", fileUri);
+            }
+            PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
+        } else {
+            Toast.makeText(this, "设备没有SD卡！", Toast.LENGTH_LONG).show();
+        }
+    }
+    private File creatFile() {
+        File iifile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
+                + "/test/" + System.currentTimeMillis() + ".jpg");
+        iifile.getParentFile().mkdirs();
+        return iifile;
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //处理扫描结果（在界面上显示）
+        if (resultCode == RESULT_OK) {
+           if (requestCode == CODE_CAMERA_REQUEST) {
+//                Bitmap bitmap = PhotoUtils.getBitmapFromUri(imageUri, this);
+                String newFile = fileUri.getParent() + "yijiamei_" + fileUri.getName();
+                Bitmap bitmap = BitmapUtils.getSmallBitmap(fileUri.getPath(), 680, 680, new File(newFile));
+                FormImage formImage = new FormImage();
+                formImage.mBitmap = bitmap;
+                formImage.mFileName = newFile;
+                formImage.id = id;
+               sendToPage(Configs.VIEW_POSITION_Main,Configs.VIEW_POSITION_Main,formImage);
+
+           }
+        }
+
+    }
+    /**
+     * 检查设备是否存在SDCard的工具方法
+     */
+    public static boolean hasSdcard() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED);
     }
 
     /**

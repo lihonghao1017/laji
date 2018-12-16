@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff"
+    android:orientation="vertical">
+
+    <com.mapbar.scale.ScaleTextView
+        android:id="@+id/lajiType"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#cdcdcd"
+        android:gravity="center"
+        android:text="铁"
+        android:textColor="@color/baseColor"
+        android:textSize="26dp" />
+
+    <com.mapbar.scale.ScaleLinearLayout
+        android:id="@+id/weiLayout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/weiStr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="重量"
+            android:textColor="#cdcdcd"
+            android:textSize="20dp" />
+
+        <com.mapbar.scale.ScaleLinearLayout
+            android:id="@+id/Layoutsss"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.mapbar.scale.ScaleTextView
+                android:id="@+id/wei"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="99.99"
+                android:textColor="#C3C3C3"
+                android:textSize="26dp" />
+
+            <View
+                android:id="@+id/lin115"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/juminMsgLayout"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/holo_blue_light" />
+        </com.mapbar.scale.ScaleLinearLayout>
+
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/weiutil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="kg"
+            android:textColor="#C3C3C3"
+            android:textSize="26dp" />
+    </com.mapbar.scale.ScaleLinearLayout>
+
+    <View
+        android:id="@+id/lin121"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/juminMsgLayout"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/holo_blue_light" />
+
+    <com.mapbar.scale.ScaleRelativeLayout
+        android:id="@+id/juminMsgLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lin112"
+        android:paddingLeft="40dp"
+        android:paddingTop="20dp"
+        android:paddingRight="40dp"
+        android:paddingBottom="20dp">
+
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/nameStr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="姓名"
+            android:textColor="#C3C3C3"
+            android:textSize="26dp" />
+
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/nameStr"
+            android:text="江南春"
+            android:textColor="#C3C3C3"
+            android:textSize="26dp" />
+
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/phontStr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nameStr"
+            android:layout_marginTop="10dp"
+            android:text="电话"
+            android:textColor="#C3C3C3"
+            android:textSize="26dp" />
+
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nameStr"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/phontStr"
+            android:text="11111111"
+            android:textColor="#C3C3C3"
+            android:textSize="26dp" />
+
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/carStr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/phontStr"
+            android:layout_marginTop="10dp"
+            android:text="卡号"
+            android:textColor="#C3C3C3"
+            android:textSize="26dp" />
+
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/car"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/phontStr"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/carStr"
+            android:text="姓名"
+            android:textColor="#C3C3C3"
+            android:textSize="26dp" />
+        <com.mapbar.scale.ScaleTextView
+            android:id="@+id/commitMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/carStr"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/carStr"
+            android:textColor="#C3C3C3"
+            android:textSize="26dp" />
+
+    </com.mapbar.scale.ScaleRelativeLayout>
+
+    <View
+        android:id="@+id/lin122"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/juminMsgLayout"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/holo_blue_light" />
+
+    <com.mapbar.scale.ScaleLinearLayout
+        android:id="@+id/imgLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </com.mapbar.scale.ScaleLinearLayout>
+
+
+    <com.mapbar.scale.ScaleLinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <com.mapbar.scale.ScaleLinearLayout
+            android:id="@+id/bottom01"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:background="@color/baseColor"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <com.mapbar.scale.ScaleImageView
+                android:id="@+id/baizhaoIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/cammm" />
+
+            <com.mapbar.scale.ScaleTextView
+                android:id="@+id/paizhaoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="拍照"
+                android:textColor="@android:color/white"
+                android:textSize="14dp" />
+        </com.mapbar.scale.ScaleLinearLayout>
+
+        <View
+            android:id="@+id/lin12"
+            android:layout_width="1dp"
+            android:layout_height="60dp"
+            android:background="@android:color/white" />
+
+        <com.mapbar.scale.ScaleLinearLayout
+            android:id="@+id/bottom02"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:background="@color/baseColor"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <com.mapbar.scale.ScaleImageView
+                android:id="@+id/yuyinIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/soundicon" />
+
+            <com.mapbar.scale.ScaleTextView
+                android:id="@+id/yuyinText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="语音"
+                android:textColor="@android:color/white"
+                android:textSize="14dp" />
+        </com.mapbar.scale.ScaleLinearLayout>
+
+        <View
+            android:id="@+id/lin13"
+            android:layout_width="1dp"
+            android:layout_height="60dp"
+            android:background="@android:color/white" />
+
+        <com.mapbar.scale.ScaleLinearLayout
+            android:id="@+id/bottom03"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_weight="1.3"
+            android:background="@android:color/holo_red_dark"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.mapbar.scale.ScaleTextView
+                android:id="@+id/commitText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="确定"
+                android:textColor="@android:color/white"
+                android:textSize="24dp" />
+        </com.mapbar.scale.ScaleLinearLayout>
+    </com.mapbar.scale.ScaleLinearLayout>
+
+</LinearLayout>

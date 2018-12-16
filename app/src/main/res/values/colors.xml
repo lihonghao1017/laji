@@ -4,5 +4,5 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="baseColor">#4AA9FD</color>
-    baseColor
+    <color name="laji01">#008577</color>
 </resources>
