@@ -276,6 +276,44 @@ public class MainActivity extends AppActivity {
         }
 
     }
+    private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
+    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
+    private static final int CODE_GALLERY_REQUEST = 0xa0;
+    private static final int CODE_RESULT_REQUEST = 0xa2;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            //调用系统相机申请拍照权限回调
+            case CAMERA_PERMISSIONS_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (hasSdcard()) {
+                        imageUri = Uri.fromFile(fileUri);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                            imageUri = FileProvider.getUriForFile(MainActivity.this, "com.zz.fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
+                        PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
+                    } else {
+                        Toast.makeText(this, "设备没有SD卡！", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(this, "请允许打开相机！！", Toast.LENGTH_LONG).show();
+                }
+                break;
+
+
+            }
+            //调用系统相册申请Sdcard权限回调
+            case STORAGE_PERMISSIONS_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
+                } else {
+                    Toast.makeText(this, "请允许打操作SDCard！！", Toast.LENGTH_LONG).show();
+                }
+                break;
+            default:
+        }
+    }
     /**
      * 检查设备是否存在SDCard的工具方法
      */

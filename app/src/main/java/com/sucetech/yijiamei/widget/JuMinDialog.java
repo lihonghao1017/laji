@@ -128,6 +128,7 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
             commitLajiBean.lajiName=laJiBean.name;
             commitLajiBean.price=99;
             homePage.willCommit(commitLajiBean);
+            dismiss();
         }
     }
 }

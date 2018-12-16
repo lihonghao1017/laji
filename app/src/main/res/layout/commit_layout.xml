@@ -173,12 +173,15 @@
         <ImageView
             android:id="@+id/img"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            />
 
         <ImageView
             android:id="@+id/voice"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:src="@mipmap/voice04"/>
     </com.mapbar.scale.ScaleLinearLayout>
 
 
@@ -232,7 +235,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp">
 
-            <com.mapbar.scale.ScaleImageView
+            <com.sucetech.yijiamei.widget.RecordButton
                 android:id="@+id/yuyinIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
