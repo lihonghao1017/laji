@@ -170,6 +170,12 @@ public class BluthDailog extends Dialog implements View.OnClickListener, Adapter
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {  //发现设备
                 BluetoothDevice btDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (btDevice.getName() != null && !btDevice.getName().equals("")) {
+                    for (int i = 0; i <bluetoothDeviceList.size() ; i++) {
+                        if (bluetoothDeviceList.get(i).bluetoothDevice.getName().equals(btDevice.getName())){
+                            return;
+                        }
+                    }
+
                     BluetoothDeviceBean bluetoothDeviceBean = new BluetoothDeviceBean();
                     bluetoothDeviceBean.bluetoothDevice = btDevice;
                     bluetoothDeviceBean.status = 0;

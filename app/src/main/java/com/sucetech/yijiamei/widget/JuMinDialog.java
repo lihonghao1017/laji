@@ -86,9 +86,11 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
             LaJiBean xiaoQuBean = new LaJiBean();
             xiaoQuBean.name = "欢腾小区" + i;
             lajis.add(xiaoQuBean);
-            xiaoQuBean.price=i+1;
+            xiaoQuBean.money=i+1;
             if (i == 2) {
-                xiaoQuBean.isMoney = true;
+                xiaoQuBean.rewardsMode = "Money";
+            }else{
+                xiaoQuBean.rewardsMode = "Both";
             }
         }
         bluthAdapter.notifyDataSetChanged();
@@ -103,7 +105,7 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         laJiBean=lajis.get(position);
         laJiBean.isSelected = true;
         bluthAdapter.notifyDataSetChanged();
-        if (laJiBean.isMoney){
+        if (laJiBean.rewardsMode.equals("Money")){
             priceStr.setText("金额");
         }else{
             priceStr.setText("积分");
