@@ -14,6 +14,7 @@ import com.mapbar.scale.ScaleLinearLayout;
 import com.sucetech.yijiamei.Configs;
 import com.sucetech.yijiamei.MainActivity;
 import com.sucetech.yijiamei.R;
+import com.sucetech.yijiamei.UserMsg;
 import com.sucetech.yijiamei.model.CommitLajiBean;
 import com.sucetech.yijiamei.model.FormImage;
 import com.sucetech.yijiamei.provider.FileUtils;
@@ -224,8 +225,10 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
         try {
             Response response = ((MainActivity) getContext()).client.newCall(request).execute();
             if(response.isSuccessful()){
-                Log.e("LLL","response-22-->"+response.body().source().toString());
-
+                String rrr=response.body().string().replace("\"", "");
+                JSONObject json=creatJson(rrr);
+                Log.e("LLL","response--json->"+json.toString());
+                sendData(json);
             }else{
                 Log.e("LLL","response--111->"+response.body().toString());
             }
@@ -235,31 +238,42 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
         }
     }
 
-    private String creatJson() {
+    private JSONObject creatJson(String files) {
         JSONObject rootJson = new JSONObject();
         try {
-            rootJson.put("audio", "");
-            rootJson.put("image", "");
+            String[]  fifi=files.split(",");
+            if (fifi!=null&&fifi.length>0){
+
+                if (fifi[0].contains(".jpg")){
+                    rootJson.put("image", fifi[0]);
+                }
+                if (fifi.length>1){
+                    rootJson.put("audio", fifi[1]);
+                }
+            }
+
+//            rootJson.put("audio", "");
+//            rootJson.put("image", "");
             rootJson.put("description", "diyici");
             rootJson.put("id", 0);
             rootJson.put("money", mCommitLajiBean.price!=null?mCommitLajiBean.price:"0");
-            rootJson.put("recycleTypeId", 0);
+            rootJson.put("recycleTypeId", mCommitLajiBean.laJiBean.id);
             rootJson.put("residentsId", 0);
             rootJson.put("score", mCommitLajiBean.jifen!=null?mCommitLajiBean.jifen:"0");
             rootJson.put("weight", mCommitLajiBean.wei);
 
-            JSONObject typeObj=new JSONObject();
+//            JSONObject typeObj=new JSONObject();
+//
+//            typeObj.put("id",mCommitLajiBean.laJiBean.id);
+//            typeObj.put("money",mCommitLajiBean.laJiBean.money);
+//            typeObj.put("name",mCommitLajiBean.laJiBean.name);
+//            typeObj.put("recycleMode",mCommitLajiBean.laJiBean.recycleMode);
+//            typeObj.put("rewardsMode",mCommitLajiBean.laJiBean.rewardsMode);
+//            typeObj.put("score",mCommitLajiBean.laJiBean.score);
+//
+//            rootJson.put("recycleType", typeObj);
 
-            typeObj.put("id",mCommitLajiBean.laJiBean.id);
-            typeObj.put("money",mCommitLajiBean.laJiBean.money);
-            typeObj.put("name",mCommitLajiBean.laJiBean.name);
-            typeObj.put("recycleMode",mCommitLajiBean.laJiBean.recycleMode);
-            typeObj.put("rewardsMode",mCommitLajiBean.laJiBean.rewardsMode);
-            typeObj.put("score",mCommitLajiBean.laJiBean.score);
-
-            rootJson.put("recycleType", typeObj);
-
-            return rootJson.toString();
+            return rootJson;
 
 
         } catch (JSONException e) {
@@ -267,7 +281,43 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
         }
 
         return null;
+    }
 
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private void sendData(JSONObject json){
 
+        RequestBody body = RequestBody.create(JSON, String.valueOf(json));
+        Request request = new Request.Builder()
+                .url(Configs.baseUrl+":8081/datong/v1/recycle")
+                .post(body)
+                .build();
+        try {
+            final Response response = ((MainActivity) getContext()).client.newCall(request).execute();
+            if (response.isSuccessful()) {
+
+                Log.e("LLL", "ok--->"+response.body().string());
+
+//                UserMsg.saveToken(response.header("Authorization"));
+//                this.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ((MainActivity)getContext()).hideProgressDailogView();
+//                        mEventManager.notifyObservers(EventStatus.logined,null);
+//                        LoginView.this.setVisibility(View.GONE);
+////                        mEventManager.notifyObservers(EventStatus.logined,null);
+//                        Toast.makeText(getContext(),"chengong -->",Toast.LENGTH_LONG);
+//                    }
+//                });
+//
+            } else {
+                Log.e("LLL", "shibai--->");
+
+//                Toast.makeText(getContext(),"shibai -->"+response.message(),Toast.LENGTH_LONG);
+                throw new IOException("Unexpected code " + response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("LLL", "IOException--->"+e.toString());
+        }
     }
 }
