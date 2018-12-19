@@ -3,6 +3,7 @@ package com.sucetech.yijiamei.provider;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,6 +13,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+
+import java.io.File;
 
 /**
  * Created by lihh on 2018/9/23.
@@ -25,12 +28,28 @@ public class PhotoUtils {
      * @param imageUri    拍照后照片存储路径
      * @param requestCode 调用系统相机请求码
      */
-    public static void takePicture(Activity activity, Uri imageUri, int requestCode) {
+    public static void takePicture(Activity activity, File imageUri, int requestCode) {
         //调用系统相机
+
+
+
         Intent intentCamera = new Intent();
         intentCamera.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-        //将拍照结果保存至photo_file的Uri中，不保留在相册中
-        intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//        //将拍照结果保存至photo_file的Uri中，不保留在相册中
+//        intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+
+        if (Build.VERSION.SDK_INT < 24) {
+            // 从文件中创建uri
+            Uri uri = Uri.fromFile(imageUri);
+            intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        } else {
+            //兼容android7.0 使用共享文件的形式
+            ContentValues contentValues = new ContentValues(1);
+            contentValues.put(MediaStore.Images.Media.DATA, imageUri.getAbsolutePath());
+            Uri uri = activity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+            intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        }
+
         activity.startActivityForResult(intentCamera, requestCode);
     }
 

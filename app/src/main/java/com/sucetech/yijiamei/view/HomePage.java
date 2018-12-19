@@ -1,10 +1,12 @@
 package com.sucetech.yijiamei.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.sucetech.yijiamei.R;
 import com.sucetech.yijiamei.model.CommitLajiBean;
 import com.sucetech.yijiamei.model.FormImage;
 import com.sucetech.yijiamei.model.JuMinBean;
+import com.sucetech.yijiamei.model.LaJiBean;
 import com.sucetech.yijiamei.model.XiaoQuBean;
 import com.sucetech.yijiamei.provider.BluthConnectTool;
 import com.sucetech.yijiamei.provider.NFCTool;
@@ -33,6 +36,7 @@ import com.sucetech.yijiamei.widget.JuMinDialog;
 import com.sucetech.yijiamei.widget.XiaoQuDailog;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class HomePage extends BasePage implements OnClickListener, BluthConnectTool.BluthStutaListener {
     private final static String TAG = "HomePage";
@@ -49,6 +53,18 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
     private JuMinDialog juMinDialog;
     public boolean isOneWEi=true;
     private CommitView commitView;
+    public List<LaJiBean> data;
+
+    private Handler mHandler=new Handler();
+    private void  sendTime(){
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                onBluthStutaListener(weied,"99");
+                sendTime();
+            }
+        },1000*2);
+    }
 
     public HomePage(Context context, View view, ActivityInterface aif) {
         super(context, view, aif);
@@ -60,9 +76,25 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
         if (BluthStuta != 4) {
             bluthDailog.show();
         }
-//        camore = view.findViewById(R.id.bottom01);
-//        voice = view.findViewById(R.id.bottom02);
-//        commit = view.findViewById(R.id.bottom03);
+        bluthDailog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                XiaoQuDailog xiaoQuDailog= new XiaoQuDailog(mContext, HomePage.this);
+                xiaoQuDailog.show();
+                xiaoQuDailog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        juMinBean= new JuMinBean();
+                        juMinBean.carNub="2018121901234566";
+                        juMinBean.name="张小三";
+                        juMinBean.phone="18701161788";
+                        juMinDialog=new JuMinDialog(mContext,HomePage.this);
+                        juMinDialog.show();
+                    }
+                });
+                sendTime();
+            }
+        });
         tabwei01 = view.findViewById(R.id.tabLayout01);
         tabwei02 = view.findViewById(R.id.tabLayout02);
         commitView= view.findViewById(R.id.CommitView);
@@ -82,6 +114,10 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
     @Override
     public void setFilterObj(int flag, FilterObj filter) {
         super.setFilterObj(flag, filter);
+        if (flag==Configs.VIEW_POSITION_Login){
+            data= (List<LaJiBean>) filter.getTag();
+
+        }
     }
 
     @Override
@@ -112,7 +148,6 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
                 commitView.setVisibility(View.GONE);
                 break;
         }
-//        mAif.showPage(this.getMyViewPosition(), Configs.VIEW_POSITION_Login, null);
     }
 
     @Override
@@ -129,7 +164,7 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
                 break;
             case coned:
                 bluthDailog.setBluthConOk((String) obj);
-                new XiaoQuDailog(mContext, this).show();
+//                new XiaoQuDailog(mContext, this).show();
                 break;
             case coning:
                 break;

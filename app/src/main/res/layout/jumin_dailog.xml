@@ -2,8 +2,7 @@
 <com.mapbar.scale.ScaleRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/boluthListLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <View
         android:layout_width="match_parent"
@@ -14,75 +13,79 @@
     <com.mapbar.scale.ScaleRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="150dp"
         android:layout_marginRight="40dp"
+        android:layout_marginTop="100dp"
         android:background="@android:color/white">
 
         <com.mapbar.scale.ScaleTextView
             android:id="@+id/jumintitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
             android:text="居民信息"
             android:textColor="@android:color/holo_blue_light"
             android:textSize="26dp" />
+
         <View
             android:id="@+id/lin112"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="20dp"
             android:layout_below="@id/jumintitle"
-            android:background="@android:color/holo_blue_light"/>
+            android:layout_marginTop="20dp"
+            android:background="@android:color/holo_blue_light" />
+
         <com.mapbar.scale.ScaleRelativeLayout
             android:id="@+id/juminMsgLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/lin112"
+            android:paddingBottom="20dp"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            >
+            android:paddingTop="20dp">
+
             <com.mapbar.scale.ScaleTextView
                 android:id="@+id/nameStr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="姓名"
                 android:textColor="#C3C3C3"
-                android:textSize="26dp"/>
+                android:textSize="26dp" />
+
             <com.mapbar.scale.ScaleTextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/nameStr"
                 android:layout_marginLeft="20dp"
-                android:textColor="#C3C3C3"
+                android:layout_toRightOf="@id/nameStr"
                 android:text="江南春"
-                android:textSize="26dp"/>
+                android:textColor="#C3C3C3"
+                android:textSize="26dp" />
 
             <com.mapbar.scale.ScaleTextView
                 android:id="@+id/phontStr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/nameStr"
-                android:text="电话"
                 android:layout_marginTop="10dp"
+                android:text="电话"
                 android:textColor="#C3C3C3"
-                android:textSize="26dp"/>
+                android:textSize="26dp" />
+
             <com.mapbar.scale.ScaleTextView
                 android:id="@+id/phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/nameStr"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/phontStr"
                 android:text="11111111"
                 android:textColor="#C3C3C3"
-                android:textSize="26dp"/>
+                android:textSize="26dp" />
 
             <com.mapbar.scale.ScaleTextView
                 android:id="@+id/carStr"
@@ -92,18 +95,19 @@
                 android:layout_marginTop="10dp"
                 android:text="卡号"
                 android:textColor="#C3C3C3"
-                android:textSize="26dp"/>
+                android:textSize="26dp" />
+
             <com.mapbar.scale.ScaleTextView
                 android:id="@+id/car"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/phontStr"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/carStr"
                 android:text="姓名"
                 android:textColor="#C3C3C3"
-                android:textSize="26dp"/>
+                android:textSize="26dp" />
 
         </com.mapbar.scale.ScaleRelativeLayout>
 
@@ -112,111 +116,162 @@
             android:id="@+id/lin113"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="20dp"
             android:layout_below="@id/juminMsgLayout"
-            android:background="@android:color/holo_blue_light"/>
+            android:layout_marginTop="20dp"
+            android:background="@android:color/holo_blue_light" />
 
         <com.mapbar.scale.ScaleRelativeLayout
             android:id="@+id/weipriceLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/lin113"
+            android:paddingBottom="20dp"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            >
+            android:paddingTop="20dp">
+
+            <com.mapbar.scale.ScaleLinearLayout
+                android:id="@+id/jifenLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.mapbar.scale.ScaleTextView
+                    android:id="@+id/jifenStr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="积分"
+                    android:textColor="#C3C3C3"
+                    android:textSize="26dp" />
+
+                <com.mapbar.scale.ScaleLinearLayout
+                    android:id="@+id/jifenLayoutsss"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.mapbar.scale.ScaleTextView
+                        android:id="@+id/jifen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="0.3元"
+                        android:textColor="#C3C3C3"
+                        android:textSize="26dp" />
+
+                    <View
+                        android:id="@+id/lin11333"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/juminMsgLayout"
+                        android:layout_marginTop="20dp"
+                        android:background="@android:color/holo_blue_light" />
+                </com.mapbar.scale.ScaleLinearLayout>
+
+            </com.mapbar.scale.ScaleLinearLayout>
+
             <com.mapbar.scale.ScaleLinearLayout
                 android:id="@+id/priceLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-            <com.mapbar.scale.ScaleTextView
-                android:id="@+id/priceStr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="金额"
-                android:textColor="#C3C3C3"
-                android:textSize="26dp"/>
-            <com.mapbar.scale.ScaleLinearLayout
-                android:id="@+id/priceLayoutsss"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                >
+                android:layout_below="@id/jifenLayout"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
                 <com.mapbar.scale.ScaleTextView
-                    android:id="@+id/price"
+                    android:id="@+id/priceStr"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:text="0.3元"
+                    android:layout_height="wrap_content"
+                    android:text="金额"
                     android:textColor="#C3C3C3"
-                    android:textSize="26dp"/>
+                    android:textSize="26dp" />
 
-                <View
-                    android:id="@+id/lin114"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_below="@id/juminMsgLayout"
-                    android:background="@android:color/holo_blue_light"/>
+                <com.mapbar.scale.ScaleLinearLayout
+                    android:id="@+id/priceLayoutsss"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.mapbar.scale.ScaleTextView
+                        android:id="@+id/price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="0.3元"
+                        android:textColor="#C3C3C3"
+                        android:textSize="26dp" />
+
+                    <View
+                        android:id="@+id/lin114"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/juminMsgLayout"
+                        android:layout_marginTop="20dp"
+                        android:background="@android:color/holo_blue_light" />
+                </com.mapbar.scale.ScaleLinearLayout>
+
             </com.mapbar.scale.ScaleLinearLayout>
 
-            </com.mapbar.scale.ScaleLinearLayout>
             <com.mapbar.scale.ScaleLinearLayout
                 android:id="@+id/weiLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/priceLayout"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                >
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
                 <com.mapbar.scale.ScaleTextView
                     android:id="@+id/weiStr"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="重量"
                     android:textColor="#C3C3C3"
-                    android:textSize="26dp"/>
+                    android:textSize="26dp" />
+
                 <com.mapbar.scale.ScaleLinearLayout
                     android:id="@+id/Layoutsss"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
+
                     <com.mapbar.scale.ScaleTextView
                         android:id="@+id/wei"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
                         android:text="0.3kg"
                         android:textColor="#C3C3C3"
-                        android:textSize="26dp"/>
+                        android:textSize="26dp" />
 
                     <View
                         android:id="@+id/lin115"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
                         android:layout_below="@id/juminMsgLayout"
-                        android:background="@android:color/holo_blue_light"/>
+                        android:layout_marginTop="20dp"
+                        android:background="@android:color/holo_blue_light" />
                 </com.mapbar.scale.ScaleLinearLayout>
             </com.mapbar.scale.ScaleLinearLayout>
         </com.mapbar.scale.ScaleRelativeLayout>
+
         <View
             android:id="@+id/lin116"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="20dp"
             android:layout_below="@id/weipriceLayout"
-            android:background="@android:color/holo_blue_light"/>
+            android:layout_marginTop="20dp"
+            android:background="@android:color/holo_blue_light" />
+
         <com.mapbar.scale.ScaleRelativeLayout
             android:id="@+id/fenleiLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/lin116"
-            android:padding="20dp">
+            android:layout_marginBottom="60dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp">
+
             <com.mapbar.scale.ScaleTextView
                 android:id="@+id/fenleititle"
                 android:layout_width="wrap_content"
@@ -224,6 +279,7 @@
                 android:text="选择分类"
                 android:textColor="@android:color/holo_blue_light"
                 android:textSize="20dp" />
+
             <GridView
                 android:id="@+id/lajiGridView"
                 android:layout_width="match_parent"
@@ -237,9 +293,9 @@
         <com.mapbar.scale.ScaleLinearLayout
             android:id="@+id/commitLayout"
             android:layout_width="match_parent"
-            android:layout_alignParentBottom="true"
             android:layout_height="60dp"
-            >
+            android:layout_alignParentBottom="true">
+
             <com.mapbar.scale.ScaleTextView
                 android:id="@+id/cansle"
                 android:layout_width="match_parent"
@@ -249,6 +305,7 @@
                 android:text="取消"
                 android:textColor="@android:color/holo_blue_light"
                 android:textSize="20dp" />
+
             <com.mapbar.scale.ScaleTextView
                 android:id="@+id/commit"
                 android:layout_width="match_parent"

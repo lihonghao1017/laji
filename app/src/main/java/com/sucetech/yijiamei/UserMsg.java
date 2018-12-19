@@ -64,6 +64,16 @@ public class UserMsg {
         return sp.getString("pwd", "");
     }
 
+    public static void savePizhongByCarId(String carId,String json) {
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString(carId, json);
+        edit.commit();
+    }
+
+    public static String getPizhongByCarId(String carId) {
+        return sp.getString(carId, null);
+    }
+
 
     public static void saveMapZoomLevel(int size) {
         SharedPreferences.Editor edit = sp.edit();

@@ -36,7 +36,11 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
     private TextView name, phone, carNub,priceStr;
     private LaJiBean laJiBean;
     private TextView weiText;
+    private View priceLayout,jifenLayout;
+    private TextView jifen,price;
+    private String wei;
     public void setWei(String wei){
+        this.wei=wei;
         if (weiText!=null)
         weiText.setText(wei+"kg");
     }
@@ -55,9 +59,12 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         carNub.setText(homePage.juMinBean.carNub);
         weiText= view.findViewById(R.id.wei);
         priceStr=view.findViewById(R.id.priceStr);
+        jifen=view.findViewById(R.id.jifen);
+        price=view.findViewById(R.id.price);
         view.findViewById(R.id.cansle).setOnClickListener(this);
         view.findViewById(R.id.commit).setOnClickListener(this);
-
+        priceLayout=view.findViewById(R.id.priceLayout);
+        jifenLayout=view.findViewById(R.id.jifenLayout);
 //        view.findViewById(R.id.bluthClose).setOnClickListener(this);
 
         setContentView(view);
@@ -72,7 +79,7 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         layoutParams.width = (int) (point.x); //宽度设置为屏幕宽度的0.5
         layoutParams.height = (int) (point.y); //高度设置为屏幕高度的0.5
         window.setAttributes(layoutParams);
-        lajis = new ArrayList<>();
+        lajis = homePage.data;
         bluthAdapter = new LajiFenLeiAdapter(context, lajis);
         lajiGridView.setAdapter(bluthAdapter);
         lajiGridView.setOnItemClickListener(this);
@@ -82,17 +89,17 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
 
             }
         });
-        for (int i = 0; i < 5; i++) {
-            LaJiBean xiaoQuBean = new LaJiBean();
-            xiaoQuBean.name = "欢腾小区" + i;
-            lajis.add(xiaoQuBean);
-            xiaoQuBean.money=i+1;
-            if (i == 2) {
-                xiaoQuBean.rewardsMode = "Money";
-            }else{
-                xiaoQuBean.rewardsMode = "Both";
-            }
-        }
+//        for (int i = 0; i < 5; i++) {
+//            LaJiBean xiaoQuBean = new LaJiBean();
+//            xiaoQuBean.name = "欢腾小区" + i;
+//            lajis.add(xiaoQuBean);
+//            xiaoQuBean.money=i+1;
+//            if (i == 2) {
+//                xiaoQuBean.rewardsMode = "Money";
+//            }else{
+//                xiaoQuBean.rewardsMode = "Both";
+//            }
+//        }
         bluthAdapter.notifyDataSetChanged();
     }
 
@@ -105,10 +112,28 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         laJiBean=lajis.get(position);
         laJiBean.isSelected = true;
         bluthAdapter.notifyDataSetChanged();
+        if (laJiBean.rewardsMode==null){
+            Toast.makeText(context,"数据异常",Toast.LENGTH_LONG).show();
+            return;
+        }
         if (laJiBean.rewardsMode.equals("Money")){
-            priceStr.setText("金额");
-        }else{
-            priceStr.setText("积分");
+            priceLayout.setVisibility(View.VISIBLE);
+            jifenLayout.setVisibility(View.GONE);
+            if(laJiBean.money>0&&wei!=null)
+            price.setText(laJiBean.money*Integer.parseInt(wei)+"元");
+        }else if (laJiBean.rewardsMode.equals("Both")){
+            priceLayout.setVisibility(View.VISIBLE);
+            jifenLayout.setVisibility(View.VISIBLE);
+            if(laJiBean.money>0&&wei!=null)
+                price.setText(laJiBean.money*Integer.parseInt(wei)+"元");
+            if(laJiBean.score>0&&wei!=null)
+                jifen.setText(laJiBean.score*Integer.parseInt(wei)+"");
+        }else {
+            priceLayout.setVisibility(View.GONE);
+            jifenLayout.setVisibility(View.VISIBLE);
+            if(laJiBean.score>0&&wei!=null)
+                jifen.setText(laJiBean.score*Integer.parseInt(wei)+"");
+
         }
     }
 
@@ -127,8 +152,18 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
                 return;
             }
             CommitLajiBean commitLajiBean=new CommitLajiBean();
+            commitLajiBean.laJiBean=laJiBean;
+            commitLajiBean.wei=wei;
             commitLajiBean.lajiName=laJiBean.name;
-            commitLajiBean.price=99;
+            commitLajiBean.type=laJiBean.rewardsMode;
+            if (commitLajiBean.type.equals("Money")){
+                commitLajiBean.price=laJiBean.money*Integer.parseInt(wei)+"";
+            }else if (commitLajiBean.type.equals("Both")){
+                commitLajiBean.price=laJiBean.money*Integer.parseInt(wei)+"";
+                commitLajiBean.jifen=laJiBean.score*Integer.parseInt(wei)+"";
+            }else{
+                commitLajiBean.jifen=laJiBean.score*Integer.parseInt(wei)+"";
+            }
             homePage.willCommit(commitLajiBean);
             dismiss();
         }

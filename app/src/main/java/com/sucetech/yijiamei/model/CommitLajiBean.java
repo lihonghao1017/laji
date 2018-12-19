@@ -2,9 +2,11 @@ package com.sucetech.yijiamei.model;
 
 public class CommitLajiBean {
     public String lajiName;
-    public int type;
+    public String type;
     public String wei;
-    public double price;
+    public String price;
+    public String jifen;
     public int id;
     public boolean isMoney;
+    public LaJiBean laJiBean;
 }

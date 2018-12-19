@@ -240,12 +240,12 @@ public class MainActivity extends AppActivity {
         this.id = id;
         if (hasSdcard()) {
             fileUri = creatFile();
-            imageUri = Uri.fromFile(fileUri);
+//            imageUri = Uri.fromFile(fileUri);
             //通过FileProvider创建一个content类型的Uri
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 imageUri = FileProvider.getUriForFile(MainActivity.this, "com.sucetech.yijiamei", fileUri);
             }
-            PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
+            PhotoUtils.takePicture(this, fileUri, CODE_CAMERA_REQUEST);
         } else {
             Toast.makeText(this, "设备没有SD卡！", Toast.LENGTH_LONG).show();
         }
@@ -289,10 +289,10 @@ public class MainActivity extends AppActivity {
             case CAMERA_PERMISSIONS_REQUEST_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (hasSdcard()) {
-                        imageUri = Uri.fromFile(fileUri);
+//                        imageUri = Uri.fromFile(fileUri);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                             imageUri = FileProvider.getUriForFile(MainActivity.this, "com.zz.fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
-                        PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
+                        PhotoUtils.takePicture(this, fileUri, CODE_CAMERA_REQUEST);
                     } else {
                         Toast.makeText(this, "设备没有SD卡！", Toast.LENGTH_LONG).show();
                     }

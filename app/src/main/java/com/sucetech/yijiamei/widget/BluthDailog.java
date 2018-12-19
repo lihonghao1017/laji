@@ -50,7 +50,7 @@ public class BluthDailog extends Dialog implements View.OnClickListener, Adapter
         listView = view.findViewById(R.id.boluthList);
         close = view.findViewById(R.id.bluthClose);
         close.setOnClickListener(this);
-        close.setVisibility(View.GONE);
+        close.setVisibility(View.VISIBLE);
         setContentView(view);
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -92,6 +92,8 @@ public class BluthDailog extends Dialog implements View.OnClickListener, Adapter
         switch (v.getId()) {
             case R.id.bluthClose:
                 this.dismiss();
+                if (mBluetoothReceiver!=null)
+                this.getContext().unregisterReceiver(mBluetoothReceiver);
                 break;
         }
 
@@ -171,7 +173,8 @@ public class BluthDailog extends Dialog implements View.OnClickListener, Adapter
                 BluetoothDevice btDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (btDevice.getName() != null && !btDevice.getName().equals("")) {
                     for (int i = 0; i <bluetoothDeviceList.size() ; i++) {
-                        if (bluetoothDeviceList.get(i).bluetoothDevice.getName().equals(btDevice.getName())){
+                        if (bluetoothDeviceList.get(i).bluetoothDevice.getName()!=null
+                                &&bluetoothDeviceList.get(i).bluetoothDevice.getName().equals(btDevice.getName())){
                             return;
                         }
                     }

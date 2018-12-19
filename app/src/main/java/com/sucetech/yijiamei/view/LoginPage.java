@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mapbar.android.model.ActivityInterface;
 import com.mapbar.android.model.BasePage;
+import com.mapbar.android.model.FilterObj;
 import com.sucetech.yijiamei.Configs;
 import com.sucetech.yijiamei.MainActivity;
 import com.sucetech.yijiamei.R;
@@ -44,8 +45,8 @@ public class LoginPage extends BasePage implements OnClickListener {
 
     public LoginPage(Context context, View view, ActivityInterface aif) {
         super(context, view, aif);
-        this.context=context;
-        this.mAif=aif;
+        this.context = context;
+        this.mAif = aif;
         username = view.findViewById(R.id.username);
         pwd = view.findViewById(R.id.pwd);
         commit = view.findViewById(R.id.commit);
@@ -56,6 +57,7 @@ public class LoginPage extends BasePage implements OnClickListener {
         pwd.setText(UserMsg.getPwd());
         mAif = aif;
     }
+
     @Override
     public int getMyViewPosition() {
         return Configs.VIEW_POSITION_Login;
@@ -96,7 +98,9 @@ public class LoginPage extends BasePage implements OnClickListener {
             }
         }
     }
+
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
     private String requestLoing2() {
 
         JSONObject jsonObject = new JSONObject();
@@ -108,11 +112,11 @@ public class LoginPage extends BasePage implements OnClickListener {
         }
         RequestBody body = RequestBody.create(JSON, String.valueOf(jsonObject));
         Request request = new Request.Builder()
-                .url(Configs.baseUrl+"/api/v1/yijiamei/login")
+                .url(Configs.baseUrl + "/api/v1/yijiamei/login")
                 .post(body)
                 .build();
         try {
-            final Response response = ((MainActivity)context).client.newCall(request).execute();
+            final Response response = ((MainActivity) context).client.newCall(request).execute();
             if (response.isSuccessful()) {
                 UserMsg.saveToken(response.header("Authorization"));
                 getMeteriType();
@@ -144,75 +148,37 @@ public class LoginPage extends BasePage implements OnClickListener {
         return null;
     }
 
-    private void getMeteriType(){
+    private void getMeteriType() {
 
         Request request = new Request.Builder()
                 .addHeader("Accept", "application/json")
-                .url(Configs.baseUrl+":8081/datong/v1/recycleType")
+                .url(Configs.baseUrl + ":8081/datong/v1/recycleType")
                 .get()
                 .build();
         try {
-            final Response response = ((MainActivity)context).client.newCall(request).execute();
+            final Response response = ((MainActivity) context).client.newCall(request).execute();
             if (response.isSuccessful()) {
                 Log.e("LLL", "chenggong--getMeteriType->");
+                List<LaJiBean> data = new Gson().fromJson(response.body().string(), new TypeToken<List<LaJiBean>>() {
+                }.getType());//把JSON字符串转为对象
+                loginSucced(data);
 
-//                try {
-                    final List<LaJiBean> data= new Gson().fromJson(response.body().string(), new TypeToken<List<LaJiBean>>(){}.getType());//把JSON字符串转为对象
-//                    JSONArray object=new JSONArray(response.body().string());
-//                    for (int i = 0; i < object.length(); i++) {
-//                        Log.e("LLL","data--->"+object.get(i).toString());
-//                    }
-//                    JSONArray array=object.getJSONArray("content");
-
-//                    final List<LaJiBean> data= new Gson().fromJson(array.toString(), new TypeToken<List<LaJiBean>>(){}.getType());//把JSON字符串转为对象
-                    for (int i = 0; i < data.size(); i++) {
-                        Log.e("LLL","data--->"+data.get(i).name);
-                    }
-
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-
-
-//                UserMsg.saveYiyuan(response.body().string());
-//                final List<WuliaoType> data= new Gson().fromJson(response.body().string(), new TypeToken<List<WuliaoType>>(){}.getType());//把JSON字符串转为对象
-//                wuiaoYiyuanBean.wuliaoTypes=data;
-////                Log.e("LLL", "chenggong--requestYiyuan->" + UserMsg.getYiyuan());
-//                this.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (wuiaoYiyuanBean.yiyaunBeanList!=null&&wuiaoYiyuanBean.yiyaunBeanList.size()>0){
-//                            ((MainActivity) getContext()).hideProgressDailogView();
-//                            mEventManager.notifyObservers(EventStatus.hospitalData, wuiaoYiyuanBean);
-//                            LoginView.this.setVisibility(View.GONE);
-////                        mEventManager.notifyObservers(EventStatus.logined,null);
-//                            Toast.makeText(getContext(), "chengong -->", Toast.LENGTH_LONG);
-//                        }
-//                    }
-//                });
-//
-//                return response.body().string();
             } else {
                 Log.e("LLL", "shibai---requestYiyuan>");
-//                ((MainActivity)getContext()).hideProgressDailogView();
-//                this.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Toast.makeText(getContext(), "shibai --requestYiyuan>", Toast.LENGTH_LONG);
-//                    }
-//                });
-//                Toast.makeText(getContext(),"shibai -->"+response.message(),Toast.LENGTH_LONG);
                 throw new IOException("Unexpected code " + response);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private void loginSucced(){
+
+    private void loginSucced(final List<LaJiBean> data) {
         username.post(new Runnable() {
             @Override
             public void run() {
-                mAif.showPage(getMyViewPosition(),Configs.VIEW_POSITION_Main,null);
+                FilterObj filterObj=new FilterObj();
+                filterObj.setTag(data);
+                mAif.showPage(getMyViewPosition(), Configs.VIEW_POSITION_Main, filterObj);
             }
         });
 
