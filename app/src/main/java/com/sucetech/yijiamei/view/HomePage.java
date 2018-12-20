@@ -73,8 +73,8 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
 
     public HomePage(Context context, View view, ActivityInterface aif) {
         super(context, view, aif);
-        showBluthDailog();
         mContext = context;
+        showBluthDailog();
         mAif = aif;
         tabwei01 = view.findViewById(R.id.tabLayout01);
         tabwei02 = view.findViewById(R.id.tabLayout02);

@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.text.format.Time;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -35,6 +36,7 @@ import com.sucetech.yijiamei.provider.BitmapUtils;
 import com.sucetech.yijiamei.provider.PhotoUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -52,6 +54,7 @@ public class MainActivity extends AppActivity {
         super.onCreate(savedInstanceState);
         showContacts();
         getPersimmions();
+        initLogs();
         UserMsg.initUserMsg(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 //		long time = System.currentTimeMillis();
@@ -68,6 +71,28 @@ public class MainActivity extends AppActivity {
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (!ifNFCUse(this)) {
             return;
+        }
+    }
+
+    public static void initLogs() {//导航相关全日制
+
+        String sdcardPath = "/sdcard/yijiamei/";
+        File file = new File(sdcardPath);
+
+        if (!file.exists()) {
+            //通过file的mkdirs()方法创建目录中包含却不存在的文件夹
+            file.mkdirs();
+        }
+        try {
+            Time t = new Time();
+            t.setToNow();
+            String time = t.monthDay + "d" + t.hour + "h" + t.minute + "m"
+                    + t.second;
+            String logPath = sdcardPath + time + ".txt";
+            Runtime.getRuntime().exec("logcat -v long -f " + logPath);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
     protected Boolean ifNFCUse(Context context) {
