@@ -73,33 +73,9 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
 
     public HomePage(Context context, View view, ActivityInterface aif) {
         super(context, view, aif);
-
+        showBluthDailog();
         mContext = context;
         mAif = aif;
-        bluthConnectTool = new BluthConnectTool(context, this);
-        bluthDailog = new BluthDailog(context, this);
-        if (BluthStuta != 4) {
-            bluthDailog.show();
-        }
-        bluthDailog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                XiaoQuDailog xiaoQuDailog= new XiaoQuDailog(mContext, HomePage.this);
-                xiaoQuDailog.show();
-                xiaoQuDailog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        juMinBean= new JuMinBean();
-                        juMinBean.carNub="2018121901234566";
-                        juMinBean.name="张小三";
-                        juMinBean.phone="18701161788";
-                        juMinDialog=new JuMinDialog(mContext,HomePage.this);
-                        juMinDialog.show();
-                    }
-                });
-//                sendTime();
-            }
-        });
         tabwei01 = view.findViewById(R.id.tabLayout01);
         tabwei02 = view.findViewById(R.id.tabLayout02);
         commitView= view.findViewById(R.id.CommitView);
@@ -114,6 +90,20 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
         tabCursor02 = view.findViewById(R.id.tabCursor02);
         back= view.findViewById(R.id.back);
         back.setOnClickListener(this);
+    }
+    private void showBluthDailog(){
+        bluthConnectTool = new BluthConnectTool(mContext, this);
+        bluthDailog = new BluthDailog(mContext, this);
+        if (BluthStuta != weied) {
+            bluthDailog.show();
+        }
+        bluthDailog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                XiaoQuDailog xiaoQuDailog= new XiaoQuDailog(mContext, HomePage.this);
+                xiaoQuDailog.show();
+            }
+        });
     }
 
     @Override
@@ -186,6 +176,10 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
     public void onReceiveData(int i0, int i1, Object o) {
         super.onReceiveData(i0, i1, o);
         if (o instanceof Intent) {
+            if (BluthStuta!=weied){
+                showBluthDailog();
+                return;
+            }
             String phon = NFCTool.getPhone((Intent) o);
             String[] use=phon.split(":");
             if (use.length>2){
