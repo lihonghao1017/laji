@@ -9,4 +9,5 @@ public class CommitLajiBean {
     public int id;
     public boolean isMoney;
     public LaJiBean laJiBean;
+    private String pizhong;
 }

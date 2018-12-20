@@ -23,6 +23,7 @@ import com.mapbar.android.model.Log;
 import com.mapbar.android.model.PageRestoreData;
 import com.sucetech.yijiamei.Configs;
 import com.sucetech.yijiamei.R;
+import com.sucetech.yijiamei.UserMsg;
 import com.sucetech.yijiamei.model.CommitLajiBean;
 import com.sucetech.yijiamei.model.FormImage;
 import com.sucetech.yijiamei.model.JuMinBean;
@@ -33,7 +34,10 @@ import com.sucetech.yijiamei.provider.NFCTool;
 import com.sucetech.yijiamei.widget.BluthDailog;
 import com.sucetech.yijiamei.widget.CommitView;
 import com.sucetech.yijiamei.widget.JuMinDialog;
+import com.sucetech.yijiamei.widget.MaoWeiDialog;
 import com.sucetech.yijiamei.widget.XiaoQuDailog;
+
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,20 +55,21 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
     private View tabCursor01, tabCursor02;
     public JuMinBean juMinBean;
     private JuMinDialog juMinDialog;
+    private MaoWeiDialog maoWeiDialog;
     public boolean isOneWEi=true;
     private CommitView commitView;
     public List<LaJiBean> data;
 
-    private Handler mHandler=new Handler();
-    private void  sendTime(){
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                onBluthStutaListener(weied,"99");
-                sendTime();
-            }
-        },1000*2);
-    }
+//    private Handler mHandler=new Handler();
+//    private void  sendTime(){
+//        mHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                onBluthStutaListener(weied,"99");
+//                sendTime();
+//            }
+//        },1000*2);
+//    }
 
     public HomePage(Context context, View view, ActivityInterface aif) {
         super(context, view, aif);
@@ -92,7 +97,7 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
                         juMinDialog.show();
                     }
                 });
-                sendTime();
+//                sendTime();
             }
         });
         tabwei01 = view.findViewById(R.id.tabLayout01);
@@ -160,6 +165,8 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
                 wei.setText(we + "");
                 if (juMinDialog!=null&&juMinDialog.isShowing()){
                     juMinDialog.setWei(we);
+                }else if(maoWeiDialog!=null&&maoWeiDialog.isShowing()){
+                    maoWeiDialog.setWei(we);
                 }
                 break;
             case coned:
@@ -186,8 +193,13 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
                 juMinBean.carNub=use[2];
                 juMinBean.name=use[0];
                 juMinBean.phone=use[1];
-                juMinDialog=new JuMinDialog(mContext,this);
-                juMinDialog.show();
+                if (!isOneWEi&&UserMsg.getPizhongByCarId(juMinBean.carNub)!=null&&!UserMsg.getPizhongByCarId(juMinBean.carNub).equals("")){
+                    maoWeiDialog=new MaoWeiDialog(mContext,this);
+                    maoWeiDialog.show();
+                }else{
+                    juMinDialog=new JuMinDialog(mContext,this);
+                    juMinDialog.show();
+                }
             }else{
                 Toast.makeText(mContext, "卡信息异常", Toast.LENGTH_LONG).show();
             }
@@ -196,9 +208,29 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
             commitView.showImg((FormImage) o);
         }
     }
-    public void willCommit(CommitLajiBean commitLajiBean){
-        commitView.setVisibility(View.VISIBLE);
-        back.setVisibility(View.VISIBLE);
-        commitView.showWillCommit(commitLajiBean);
+    public void willCommit(CommitLajiBean commitLajiBean, JSONObject data){
+        if (isOneWEi){
+            commitView.setVisibility(View.VISIBLE);
+            back.setVisibility(View.VISIBLE);
+            commitView.showWillCommit(commitLajiBean,data);
+        }else{
+            if (commitLajiBean!=null)
+            UserMsg.savePizhongByCarId(juMinBean.carNub,data.toString());
+            else{
+                commitView.setVisibility(View.VISIBLE);
+                back.setVisibility(View.VISIBLE);
+                commitView.showWillCommit(commitLajiBean,data);
+            }
+        }
+
+    }
+
+    public void commitOK(){
+        back.post(new Runnable() {
+            @Override
+            public void run() {
+                onClick(back);
+            }
+        });
     }
 }

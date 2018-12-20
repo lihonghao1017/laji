@@ -17,6 +17,7 @@ import com.sucetech.yijiamei.R;
 import com.sucetech.yijiamei.UserMsg;
 import com.sucetech.yijiamei.model.CommitLajiBean;
 import com.sucetech.yijiamei.model.FormImage;
+import com.sucetech.yijiamei.model.LaJiBean;
 import com.sucetech.yijiamei.provider.FileUtils;
 import com.sucetech.yijiamei.provider.PhontoUtils;
 import com.sucetech.yijiamei.provider.TaskManager;
@@ -43,6 +44,8 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
     private String audioPath;
     private MediaPlayer mediaPlayer;
     private CommitLajiBean mCommitLajiBean;
+    boolean isOnceSend;
+    private JSONObject data;
 
 
     public CommitView(Context context, AttributeSet attrs) {
@@ -84,19 +87,44 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
         this.homePage = homePage;
     }
 
-    public void showWillCommit(CommitLajiBean commitLajiBean) {
-        this.mCommitLajiBean=commitLajiBean;
+    public void showWillCommit(CommitLajiBean commitLajiBean, JSONObject data) {
         name.setText(homePage.juMinBean.name);
         phone.setText(homePage.juMinBean.phone);
         carNub.setText(homePage.juMinBean.carNub);
-        lajiType.setText(commitLajiBean.lajiName);
-        wei.setText(commitLajiBean.wei + "");
-        if (commitLajiBean.type.equals("Money")) {
-            commitMsg.setText("本次称重可以获得" + commitLajiBean.price + "元现金");
-        } else if (commitLajiBean.type.equals("Both")) {
-            commitMsg.setText("本次称重可以获得" + commitLajiBean.price + "元现金," + commitLajiBean.price + "积分");
+        if (commitLajiBean != null) {
+            isOnceSend=true;
+            this.mCommitLajiBean = commitLajiBean;
         } else {
-            commitMsg.setText("本次称重可以获得" + commitLajiBean.jifen + "积分");
+            isOnceSend=false;
+            this.mCommitLajiBean =new CommitLajiBean();
+
+            try {
+//                data = new JSONObject(UserMsg.getPizhongByCarId(homePage.juMinBean.carNub));
+                this.data=data;
+                int lajiId = data.getInt("recycleTypeId");
+                for (int i = 0; i < homePage.data.size(); i++) {
+                    if (homePage.data.get(i).id == lajiId) {
+                        this.mCommitLajiBean.laJiBean = homePage.data.get(i);
+                    }
+                }
+                this.mCommitLajiBean.lajiName=this.mCommitLajiBean.laJiBean.name;
+                this.mCommitLajiBean.type=mCommitLajiBean.laJiBean.rewardsMode;
+                this.mCommitLajiBean.price=data.optString("money");
+                this.mCommitLajiBean.jifen= data.optString("score");
+                this.mCommitLajiBean.wei=data.optString("weight");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        lajiType.setText( this.mCommitLajiBean.lajiName);
+        wei.setText( this.mCommitLajiBean.wei + "");
+        if ( this.mCommitLajiBean.type.equals("Money")) {
+            commitMsg.setText("本次称重可以获得" + this.mCommitLajiBean.price + "元现金");
+        } else if ( this.mCommitLajiBean.type.equals("Both")) {
+            commitMsg.setText("本次称重可以获得" + this.mCommitLajiBean.price + "元现金," + this.mCommitLajiBean.price + "积分");
+        } else {
+            commitMsg.setText("本次称重可以获得" + this.mCommitLajiBean.jifen + "积分");
         }
     }
 
@@ -198,24 +226,22 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
         }
 
     }
-    private void upLoadFile(){
-//        RequestBody requestBody1 = RequestBody.create(MediaType.get("application/json"), data);
+
+    private void upLoadFile() {
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.setType(MultipartBody.FORM);
-//        builder.addFormDataPart("data", null, requestBody1);
-        if (img != null && img.getTag() != null ) {
+        if (img != null && img.getTag() != null) {
             FormImage formImage = (FormImage) img.getTag();
             builder.addFormDataPart("data", formImage.mFileName,
                     RequestBody.create(MediaType.get("image/jpg"), FileUtils.getFile(formImage.mFileName)));
         }
         if (audioPath != null) {
-                File audioFile = new File(audioPath);
-                if (audioFile.exists()) {
-                    builder.addFormDataPart("data", audioFile.getName(),
-                            RequestBody.create(MediaType.get("audio/amr"), FileUtils.getFile(audioPath)));
-                }
+            File audioFile = new File(audioPath);
+            if (audioFile.exists()) {
+                builder.addFormDataPart("data", audioFile.getName(),
+                        RequestBody.create(MediaType.get("audio/amr"), FileUtils.getFile(audioPath)));
+            }
         }
-
         String url = Configs.baseUrl + ":8081/datong/v1/upload";
         Request request = new Request.Builder()
                 .url(url)
@@ -224,15 +250,14 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
                 .build();
         try {
             Response response = ((MainActivity) getContext()).client.newCall(request).execute();
-            if(response.isSuccessful()){
-                String rrr=response.body().string().replace("\"", "");
-                JSONObject json=creatJson(rrr);
-                Log.e("LLL","response--json->"+json.toString());
+            if (response.isSuccessful()) {
+                String rrr = response.body().string().replace("\"", "");
+                JSONObject json = creatJson(rrr);
+                Log.e("LLL", "response--json->" + json.toString());
                 sendData(json);
-            }else{
-                Log.e("LLL","response--111->"+response.body().toString());
+            } else {
+                Log.e("LLL", "response--111->" + response.body().toString());
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -241,83 +266,53 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
     private JSONObject creatJson(String files) {
         JSONObject rootJson = new JSONObject();
         try {
-            String[]  fifi=files.split(",");
-            if (fifi!=null&&fifi.length>0){
-
-                if (fifi[0].contains(".jpg")){
+            String[] fifi = files.split(",");
+            if (fifi != null && fifi.length > 0) {
+                if (fifi[0].contains(".jpg")) {
                     rootJson.put("image", fifi[0]);
                 }
-                if (fifi.length>1){
+                if (fifi.length > 1) {
                     rootJson.put("audio", fifi[1]);
                 }
             }
-
-//            rootJson.put("audio", "");
-//            rootJson.put("image", "");
             rootJson.put("description", "diyici");
             rootJson.put("id", 0);
-            rootJson.put("money", mCommitLajiBean.price!=null?mCommitLajiBean.price:"0");
+            rootJson.put("money", mCommitLajiBean.price != null ? mCommitLajiBean.price : "0");
             rootJson.put("recycleTypeId", mCommitLajiBean.laJiBean.id);
-            rootJson.put("residentsId", 0);
-            rootJson.put("score", mCommitLajiBean.jifen!=null?mCommitLajiBean.jifen:"0");
+            rootJson.put("residentsId", 1);
+            rootJson.put("score", mCommitLajiBean.jifen != null ? mCommitLajiBean.jifen : "0");
             rootJson.put("weight", mCommitLajiBean.wei);
-
-//            JSONObject typeObj=new JSONObject();
-//
-//            typeObj.put("id",mCommitLajiBean.laJiBean.id);
-//            typeObj.put("money",mCommitLajiBean.laJiBean.money);
-//            typeObj.put("name",mCommitLajiBean.laJiBean.name);
-//            typeObj.put("recycleMode",mCommitLajiBean.laJiBean.recycleMode);
-//            typeObj.put("rewardsMode",mCommitLajiBean.laJiBean.rewardsMode);
-//            typeObj.put("score",mCommitLajiBean.laJiBean.score);
-//
-//            rootJson.put("recycleType", typeObj);
-
             return rootJson;
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private void sendData(JSONObject json){
 
+    private void sendData(JSONObject json) {
         RequestBody body = RequestBody.create(JSON, String.valueOf(json));
         Request request = new Request.Builder()
-                .url(Configs.baseUrl+":8081/datong/v1/recycle")
+                .url(Configs.baseUrl + ":8081/datong/v1/recycle")
                 .post(body)
                 .build();
         try {
             final Response response = ((MainActivity) getContext()).client.newCall(request).execute();
             if (response.isSuccessful()) {
+                if (!isOnceSend){
+                    UserMsg.savePizhongByCarId(homePage.juMinBean.carNub,"");
+                }
+                homePage.commitOK();
 
-                Log.e("LLL", "ok--->"+response.body().string());
-
-//                UserMsg.saveToken(response.header("Authorization"));
-//                this.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        ((MainActivity)getContext()).hideProgressDailogView();
-//                        mEventManager.notifyObservers(EventStatus.logined,null);
-//                        LoginView.this.setVisibility(View.GONE);
-////                        mEventManager.notifyObservers(EventStatus.logined,null);
-//                        Toast.makeText(getContext(),"chengong -->",Toast.LENGTH_LONG);
-//                    }
-//                });
-//
+                Log.e("LLL", "ok--->" + response.body().string());
             } else {
                 Log.e("LLL", "shibai--->");
-
-//                Toast.makeText(getContext(),"shibai -->"+response.message(),Toast.LENGTH_LONG);
                 throw new IOException("Unexpected code " + response);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("LLL", "IOException--->"+e.toString());
+            Log.e("LLL", "IOException--->" + e.toString());
         }
     }
 }

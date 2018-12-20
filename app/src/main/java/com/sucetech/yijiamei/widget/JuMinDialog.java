@@ -24,6 +24,9 @@ import com.sucetech.yijiamei.model.LaJiBean;
 import com.sucetech.yijiamei.model.XiaoQuBean;
 import com.sucetech.yijiamei.view.HomePage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,7 +150,7 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         if (v.getId() == R.id.cansle) {
             dismiss();
         }else if(v.getId() == R.id.commit){
-            if (laJiBean==null){
+            if (laJiBean==null||wei==null){
                 Toast.makeText(context,"请选择垃圾类型",Toast.LENGTH_LONG).show();
                 return;
             }
@@ -164,8 +167,27 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
             }else{
                 commitLajiBean.jifen=laJiBean.score*Integer.parseInt(wei)+"";
             }
-            homePage.willCommit(commitLajiBean);
+
+
+            homePage.willCommit(commitLajiBean,creatJson(commitLajiBean));
             dismiss();
         }
+    }
+
+    private JSONObject creatJson(CommitLajiBean commitLajiBean) {
+        JSONObject rootJson = new JSONObject();
+        try {
+            rootJson.put("description", "diyici");
+            rootJson.put("id", 0);
+            rootJson.put("money", commitLajiBean.price!=null?commitLajiBean.price:"0");
+            rootJson.put("recycleTypeId", commitLajiBean.laJiBean.id);
+            rootJson.put("residentsId", homePage.juMinBean.carNub);
+            rootJson.put("score", commitLajiBean.jifen!=null?commitLajiBean.jifen:"0");
+            rootJson.put("weight", commitLajiBean.wei);
+            return rootJson;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -71,7 +71,7 @@ public class UserMsg {
     }
 
     public static String getPizhongByCarId(String carId) {
-        return sp.getString(carId, null);
+        return sp.getString(carId, "");
     }
 
 

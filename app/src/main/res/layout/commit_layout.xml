@@ -42,7 +42,6 @@
                 android:id="@+id/wei"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:text="99.99"
                 android:textColor="#C3C3C3"
                 android:textSize="26dp" />
 
@@ -96,7 +95,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/nameStr"
-            android:text="江南春"
             android:textColor="#C3C3C3"
             android:textSize="26dp" />
 
@@ -118,7 +116,6 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/phontStr"
-            android:text="11111111"
             android:textColor="#C3C3C3"
             android:textSize="26dp" />
 
@@ -140,7 +137,6 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/carStr"
-            android:text="姓名"
             android:textColor="#C3C3C3"
             android:textSize="26dp" />
         <com.mapbar.scale.ScaleTextView
