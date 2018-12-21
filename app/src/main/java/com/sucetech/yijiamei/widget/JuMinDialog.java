@@ -4,13 +4,17 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,7 +34,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JuMinDialog extends Dialog implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class JuMinDialog extends Dialog implements View.OnClickListener, AdapterView.OnItemClickListener ,TextWatcher {
     private List<LaJiBean> lajis;
     private GridView lajiGridView;
     private LajiFenLeiAdapter bluthAdapter;
@@ -38,7 +42,7 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
     private HomePage homePage;
     private TextView name, phone, carNub,priceStr;
     private LaJiBean laJiBean;
-    private TextView weiText;
+    private EditText weiText;
     private View priceLayout,jifenLayout;
     private TextView jifen,price;
     private String wei;
@@ -61,6 +65,8 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         phone.setText(homePage.juMinBean.phone);
         carNub.setText(homePage.juMinBean.carNub);
         weiText= view.findViewById(R.id.wei);
+        weiText.addTextChangedListener(this);
+        weiText.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         priceStr=view.findViewById(R.id.priceStr);
         jifen=view.findViewById(R.id.jifen);
         price=view.findViewById(R.id.price);
@@ -68,10 +74,7 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         view.findViewById(R.id.commit).setOnClickListener(this);
         priceLayout=view.findViewById(R.id.priceLayout);
         jifenLayout=view.findViewById(R.id.jifenLayout);
-//        view.findViewById(R.id.bluthClose).setOnClickListener(this);
-
         setContentView(view);
-
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay(); //获取屏幕宽高
         Point point = new Point();
@@ -92,23 +95,13 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
 
             }
         });
-//        for (int i = 0; i < 5; i++) {
-//            LaJiBean xiaoQuBean = new LaJiBean();
-//            xiaoQuBean.name = "欢腾小区" + i;
-//            lajis.add(xiaoQuBean);
-//            xiaoQuBean.money=i+1;
-//            if (i == 2) {
-//                xiaoQuBean.rewardsMode = "Money";
-//            }else{
-//                xiaoQuBean.rewardsMode = "Both";
-//            }
-//        }
         bluthAdapter.notifyDataSetChanged();
     }
 
-
+private int position=-1;
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        this.position=position;
         for (int i = 0; i < lajis.size(); i++) {
             lajis.get(i).isSelected = false;
         }
@@ -189,5 +182,21 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        wei=s.toString();
+        if (this.position>-1)
+        onItemClick(null,null, this.position,-1);
     }
 }

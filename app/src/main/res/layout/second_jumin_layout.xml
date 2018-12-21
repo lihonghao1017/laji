@@ -230,12 +230,32 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <com.mapbar.scale.ScaleTextView
-                        android:id="@+id/wei"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:textColor="#C3C3C3"
-                        android:textSize="26dp" />
+                    <com.mapbar.scale.ScaleLinearLayout
+                        android:id="@+id/Layoutssss"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <com.mapbar.scale.ScaleEditText
+                            android:id="@+id/wei"
+                            android:layout_width="170dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:digits="1234567890."
+                            android:gravity="center"
+                            android:textColor="#C3C3C3"
+                            android:textSize="26dp" />
+
+                        <com.mapbar.scale.ScaleTextView
+                            android:id="@+id/weiStrss"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:gravity="center"
+                            android:text="kg"
+                            android:textColor="#C3C3C3"
+                            android:textSize="26dp" />
+                    </com.mapbar.scale.ScaleLinearLayout>
 
                     <View
                         android:id="@+id/lin115"

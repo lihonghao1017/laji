@@ -4,12 +4,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -31,7 +34,7 @@ import java.util.List;
  * Created by lihh on 2018/12/20.
  */
 
-public class MaoWeiDialog extends Dialog implements View.OnClickListener {
+public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWatcher {
     private List<LaJiBean> lajis;
     private Context context;
     private HomePage homePage;
@@ -47,8 +50,8 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener {
 
     public void setWei(String wei) {
         this.wei = wei;
-        if (weiText != null)
-            weiText.setText(wei + "kg");
+//        if (weiText != null)
+//            weiText.setText(wei + "kg");
         int zhongliang=(Integer.parseInt(Maowei)-Integer.parseInt(wei));
         if (zhongliang<=0){
             Toast.makeText(context,"重量异常!",Toast.LENGTH_LONG).show();
@@ -89,6 +92,8 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener {
 
 
         weiText = view.findViewById(R.id.wei);
+        weiText.addTextChangedListener(this);
+        weiText.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         priceStr = view.findViewById(R.id.priceStr);
         jifen = view.findViewById(R.id.jifen);
         price = view.findViewById(R.id.price);
@@ -171,4 +176,20 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        wei=s.toString();
+        if (wei!=null&&!wei.equals(""))
+        setWei(wei);
+    }
 }

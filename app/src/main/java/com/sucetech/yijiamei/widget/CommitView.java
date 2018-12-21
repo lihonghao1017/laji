@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mapbar.scale.ScaleLinearLayout;
 import com.sucetech.yijiamei.Configs;
@@ -230,10 +231,13 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
     private void upLoadFile() {
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.setType(MultipartBody.FORM);
+        boolean isImgSend=true,isAudiSend=true;
         if (img != null && img.getTag() != null) {
             FormImage formImage = (FormImage) img.getTag();
             builder.addFormDataPart("data", formImage.mFileName,
                     RequestBody.create(MediaType.get("image/jpg"), FileUtils.getFile(formImage.mFileName)));
+        }else{
+            isImgSend=false;
         }
         if (audioPath != null) {
             File audioFile = new File(audioPath);
@@ -241,6 +245,18 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
                 builder.addFormDataPart("data", audioFile.getName(),
                         RequestBody.create(MediaType.get("audio/amr"), FileUtils.getFile(audioPath)));
             }
+        }else{
+            isAudiSend=false;
+        }
+        if (!isAudiSend&&!isImgSend){
+            commitMsg.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getContext(),"请拍照收据",Toast.LENGTH_LONG).show();
+                }
+            });
+
+            return;
         }
         String url = Configs.baseUrl + ":8081/datong/v1/upload";
         Request request = new Request.Builder()

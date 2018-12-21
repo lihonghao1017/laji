@@ -176,10 +176,10 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
     public void onReceiveData(int i0, int i1, Object o) {
         super.onReceiveData(i0, i1, o);
         if (o instanceof Intent) {
-            if (BluthStuta!=weied){
-                showBluthDailog();
-                return;
-            }
+//            if (BluthStuta!=weied){
+//                showBluthDailog();
+//                return;
+//            }
             String phon = NFCTool.getPhone((Intent) o);
             String[] use=phon.split(":");
             if (use.length>2){
