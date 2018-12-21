@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Point;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -34,6 +35,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sucetech.yijiamei.provider.BluthConnectTool.BluthStutaListener.weied;
+
 public class JuMinDialog extends Dialog implements View.OnClickListener, AdapterView.OnItemClickListener ,TextWatcher {
     private List<LaJiBean> lajis;
     private GridView lajiGridView;
@@ -46,10 +49,19 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
     private View priceLayout,jifenLayout;
     private TextView jifen,price;
     private String wei;
+
     public void setWei(String wei){
+        Log.e("LLL","setWei--->"+wei);
+        if (wei.equals(this.wei))return;
         this.wei=wei;
-        if (weiText!=null)
-        weiText.setText(wei+"kg");
+        weiText.post(new Runnable() {
+            @Override
+            public void run() {
+                if (weiText!=null)
+                    weiText.setText(JuMinDialog.this.wei);
+            }
+        });
+
     }
 
     public JuMinDialog(Context context, HomePage homePage) {
@@ -65,7 +77,9 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         phone.setText(homePage.juMinBean.phone);
         carNub.setText(homePage.juMinBean.carNub);
         weiText= view.findViewById(R.id.wei);
-        weiText.addTextChangedListener(this);
+        if (homePage.BluthStuta!=weied){
+            weiText.addTextChangedListener(this);
+        }
         weiText.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         priceStr=view.findViewById(R.id.priceStr);
         jifen=view.findViewById(R.id.jifen);
@@ -116,19 +130,19 @@ private int position=-1;
             priceLayout.setVisibility(View.VISIBLE);
             jifenLayout.setVisibility(View.GONE);
             if(laJiBean.money>0&&wei!=null)
-            price.setText(laJiBean.money*Integer.parseInt(wei)+"元");
+            price.setText(laJiBean.money*Double.parseDouble(wei)+"元");
         }else if (laJiBean.rewardsMode.equals("Both")){
             priceLayout.setVisibility(View.VISIBLE);
             jifenLayout.setVisibility(View.VISIBLE);
             if(laJiBean.money>0&&wei!=null)
-                price.setText(laJiBean.money*Integer.parseInt(wei)+"元");
+                price.setText(laJiBean.money*Double.parseDouble(wei)+"元");
             if(laJiBean.score>0&&wei!=null)
-                jifen.setText(laJiBean.score*Integer.parseInt(wei)+"");
+                jifen.setText(laJiBean.score*Double.parseDouble(wei)+"");
         }else {
             priceLayout.setVisibility(View.GONE);
             jifenLayout.setVisibility(View.VISIBLE);
             if(laJiBean.score>0&&wei!=null)
-                jifen.setText(laJiBean.score*Integer.parseInt(wei)+"");
+                jifen.setText(laJiBean.score*Double.parseDouble(wei)+"");
 
         }
     }
@@ -153,12 +167,12 @@ private int position=-1;
             commitLajiBean.lajiName=laJiBean.name;
             commitLajiBean.type=laJiBean.rewardsMode;
             if (commitLajiBean.type.equals("Money")){
-                commitLajiBean.price=laJiBean.money*Integer.parseInt(wei)+"";
+                commitLajiBean.price=laJiBean.money*Double.parseDouble(wei)+"";
             }else if (commitLajiBean.type.equals("Both")){
-                commitLajiBean.price=laJiBean.money*Integer.parseInt(wei)+"";
-                commitLajiBean.jifen=laJiBean.score*Integer.parseInt(wei)+"";
+                commitLajiBean.price=laJiBean.money*Double.parseDouble(wei)+"";
+                commitLajiBean.jifen=laJiBean.score*Double.parseDouble(wei)+"";
             }else{
-                commitLajiBean.jifen=laJiBean.score*Integer.parseInt(wei)+"";
+                commitLajiBean.jifen=laJiBean.score*Double.parseDouble(wei)+"";
             }
 
 
@@ -191,12 +205,14 @@ private int position=-1;
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        wei=s.toString();
+        Log.e("LLL","onTextChanged--->"+wei);
+        if (this.position>-1)
+            onItemClick(null,null, this.position,-1);
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        wei=s.toString();
-        if (this.position>-1)
-        onItemClick(null,null, this.position,-1);
+
     }
 }

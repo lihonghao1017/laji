@@ -30,6 +30,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import static com.sucetech.yijiamei.provider.BluthConnectTool.BluthStutaListener.weied;
+
 /**
  * Created by lihh on 2018/12/20.
  */
@@ -45,14 +47,15 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
     private TextView jifen, price;
     private String wei;
     private String Maowei;//毛重
-    private int zhongliang;//净重
+    private double zhongliang;//净重
 
 
     public void setWei(String wei) {
+        if (wei.equals(this.wei))return;
         this.wei = wei;
 //        if (weiText != null)
 //            weiText.setText(wei + "kg");
-        int zhongliang=(Integer.parseInt(Maowei)-Integer.parseInt(wei));
+        double zhongliang=(Double.parseDouble(Maowei)-Double.parseDouble(wei));
         if (zhongliang<=0){
             Toast.makeText(context,"重量异常!",Toast.LENGTH_LONG).show();
         }
@@ -92,7 +95,9 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
 
 
         weiText = view.findViewById(R.id.wei);
-        weiText.addTextChangedListener(this);
+        if (homePage.BluthStuta!=weied){
+            weiText.addTextChangedListener(this);
+        }
         weiText.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         priceStr = view.findViewById(R.id.priceStr);
         jifen = view.findViewById(R.id.jifen);

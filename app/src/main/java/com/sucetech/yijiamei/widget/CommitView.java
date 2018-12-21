@@ -291,12 +291,19 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
                     rootJson.put("audio", fifi[1]);
                 }
             }
+
+            if (mCommitLajiBean.price !=null){
+                rootJson.put("money", (int)Double.parseDouble(mCommitLajiBean.price));
+            }
+            if (mCommitLajiBean.price !=null){
+                rootJson.put("score", (int)Double.parseDouble(mCommitLajiBean.jifen));
+            }
             rootJson.put("description", "diyici");
             rootJson.put("id", 0);
-            rootJson.put("money", mCommitLajiBean.price != null ? mCommitLajiBean.price : "0");
+//            rootJson.put("money", mCommitLajiBean.price != null ? mCommitLajiBean.price : "0");
             rootJson.put("recycleTypeId", mCommitLajiBean.laJiBean.id);
             rootJson.put("residentsId", 1);
-            rootJson.put("score", mCommitLajiBean.jifen != null ? mCommitLajiBean.jifen : "0");
+//            rootJson.put("score", mCommitLajiBean.jifen != null ? mCommitLajiBean.jifen : "0");
             rootJson.put("weight", mCommitLajiBean.wei);
             return rootJson;
         } catch (JSONException e) {
