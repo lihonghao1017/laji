@@ -55,7 +55,7 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
         this.wei = wei;
 //        if (weiText != null)
 //            weiText.setText(wei + "kg");
-        double zhongliang=(Double.parseDouble(Maowei)-Double.parseDouble(wei));
+        zhongliang=(Double.parseDouble(Maowei)-Double.parseDouble(wei));
         if (zhongliang<=0){
             Toast.makeText(context,"重量异常!",Toast.LENGTH_LONG).show();
         }
