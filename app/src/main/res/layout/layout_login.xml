@@ -10,12 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:background="@mipmap/loginbj"
+        android:orientation="vertical"
         android:gravity="center">
 
         <com.mapbar.scale.ScaleImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@mipmap/newlog333" />
+        <com.mapbar.scale.ScaleTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/newlogo" />
+            android:textSize="18dp"
+            android:textColor="@android:color/white"
+            android:text="雁林环保-农村垃圾分类大管家"/>
     </com.mapbar.scale.ScaleLinearLayout>
 
     <com.mapbar.scale.ScaleRelativeLayout

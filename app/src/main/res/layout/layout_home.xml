@@ -74,7 +74,7 @@
                 android:gravity="center"
                 android:text="称重"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20dp" />
+                android:textSize="26dp" />
 
             <View
                 android:id="@+id/tabCursor01"
@@ -102,7 +102,7 @@
                 android:gravity="center"
                 android:text="称毛/称皮"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20dp" />
+                android:textSize="26dp" />
 
             <View
                 android:id="@+id/tabCursor02"

@@ -53,7 +53,7 @@ public class BluthAdapter extends BaseAdapter {
         if (deviceList.get(position).status==1){
             holder.statuStr.setText("连接中...");
         }else  if (deviceList.get(position).status==0){
-            holder.statuStr.setText("连接失败");
+            holder.statuStr.setText("连接");
         }else  if (deviceList.get(position).status==0){
             holder.statuStr.setText("连接成功");
         }

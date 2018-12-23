@@ -249,12 +249,15 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
             isAudiSend=false;
         }
         if (!isAudiSend&&!isImgSend){
-            commitMsg.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getContext(),"请拍照收据",Toast.LENGTH_LONG).show();
-                }
-            });
+//            commitMsg.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Toast.makeText(getContext(),"请拍照收据",Toast.LENGTH_LONG).show();
+//                }
+//            });
+            JSONObject json = creatJson(null,true);
+            Log.e("LLL", "response--json->" + json.toString());
+            sendData(json);
 
             return;
         }
@@ -268,7 +271,7 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
             Response response = ((MainActivity) getContext()).client.newCall(request).execute();
             if (response.isSuccessful()) {
                 String rrr = response.body().string().replace("\"", "");
-                JSONObject json = creatJson(rrr);
+                JSONObject json = creatJson(rrr,false);
                 Log.e("LLL", "response--json->" + json.toString());
                 sendData(json);
             } else {
@@ -279,25 +282,28 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
         }
     }
 
-    private JSONObject creatJson(String files) {
+    private JSONObject creatJson(String files,boolean isOnceSend) {
+
         JSONObject rootJson = new JSONObject();
         try {
-            String[] fifi = files.split(",");
-            if (fifi != null && fifi.length > 0) {
-                if (fifi[0].contains(".jpg")) {
-                    rootJson.put("image", fifi[0]);
+            if (!isOnceSend){
+                String[] fifi = files.split(",");
+                if (fifi != null && fifi.length > 0) {
+                    if (fifi[0].contains(".jpg")) {
+                        rootJson.put("image", fifi[0]);
+                    }
+                    if (fifi.length > 1) {
+                        rootJson.put("audio", fifi[1]);
+                    }
                 }
-                if (fifi.length > 1) {
-                    rootJson.put("audio", fifi[1]);
+                if (mCommitLajiBean.price !=null){
+                    rootJson.put("money", (int)Double.parseDouble(mCommitLajiBean.price));
+                }
+                if (mCommitLajiBean.price !=null){
+                    rootJson.put("score", (int)Double.parseDouble(mCommitLajiBean.jifen));
                 }
             }
 
-            if (mCommitLajiBean.price !=null){
-                rootJson.put("money", (int)Double.parseDouble(mCommitLajiBean.price));
-            }
-            if (mCommitLajiBean.price !=null){
-                rootJson.put("score", (int)Double.parseDouble(mCommitLajiBean.jifen));
-            }
             rootJson.put("description", "diyici");
             rootJson.put("id", 0);
 //            rootJson.put("money", mCommitLajiBean.price != null ? mCommitLajiBean.price : "0");
