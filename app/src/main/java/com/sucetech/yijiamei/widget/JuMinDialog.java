@@ -32,6 +32,7 @@ import com.sucetech.yijiamei.view.HomePage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,20 +130,27 @@ private int position=-1;
         if (laJiBean.rewardsMode.equals("Money")){
             priceLayout.setVisibility(View.VISIBLE);
             jifenLayout.setVisibility(View.GONE);
-            if(laJiBean.money>0&&wei!=null)
-            price.setText(laJiBean.money*Double.parseDouble(wei)+"元");
+            if(laJiBean.money>0&&wei!=null){
+                BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                price.setText(f1+"元");
+            }
         }else if (laJiBean.rewardsMode.equals("Both")){
             priceLayout.setVisibility(View.VISIBLE);
             jifenLayout.setVisibility(View.VISIBLE);
-            if(laJiBean.money>0&&wei!=null)
-                price.setText(laJiBean.money*Double.parseDouble(wei)+"元");
+            if(laJiBean.money>0&&wei!=null) {
+                BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                price.setText(f1+"元");
+            }
+
             if(laJiBean.score>0&&wei!=null)
-                jifen.setText(laJiBean.score*Double.parseDouble(wei)+"");
+                jifen.setText((int) Math.ceil(laJiBean.score*Double.parseDouble(wei))+"");
         }else {
             priceLayout.setVisibility(View.GONE);
             jifenLayout.setVisibility(View.VISIBLE);
             if(laJiBean.score>0&&wei!=null)
-                jifen.setText(laJiBean.score*Double.parseDouble(wei)+"");
+                jifen.setText((int)Math.ceil(laJiBean.score*Double.parseDouble(wei))+"");
 
         }
     }
@@ -167,12 +175,16 @@ private int position=-1;
             commitLajiBean.lajiName=laJiBean.name;
             commitLajiBean.type=laJiBean.rewardsMode;
             if (commitLajiBean.type.equals("Money")){
-                commitLajiBean.price=laJiBean.money*Double.parseDouble(wei)+"";
+                BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                commitLajiBean.price=f1+"";
             }else if (commitLajiBean.type.equals("Both")){
-                commitLajiBean.price=laJiBean.money*Double.parseDouble(wei)+"";
-                commitLajiBean.jifen=laJiBean.score*Double.parseDouble(wei)+"";
+                BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                commitLajiBean.price=f1+"";
+                commitLajiBean.jifen=(int)Math.ceil(laJiBean.score*Double.parseDouble(wei))+"";
             }else{
-                commitLajiBean.jifen=laJiBean.score*Double.parseDouble(wei)+"";
+                commitLajiBean.jifen=(int)Math.ceil(laJiBean.score*Double.parseDouble(wei))+"";
             }
 
 

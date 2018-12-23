@@ -28,6 +28,7 @@ import com.sucetech.yijiamei.view.HomePage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static com.sucetech.yijiamei.provider.BluthConnectTool.BluthStutaListener.weied;
@@ -53,29 +54,35 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
     public void setWei(String wei) {
         if (wei.equals(this.wei))return;
         this.wei = wei;
-//        if (weiText != null)
-//            weiText.setText(wei + "kg");
+        if (weiText != null)
+            weiText.setText(wei);
         zhongliang=(Double.parseDouble(Maowei)-Double.parseDouble(wei));
         if (zhongliang<=0){
-            Toast.makeText(context,"重量异常!",Toast.LENGTH_LONG).show();
+            Toast.makeText(context,"皮重大于等于毛重!",Toast.LENGTH_LONG).show();
         }
         if (laJiBean.rewardsMode.equals("Money")){
             priceLayout.setVisibility(View.VISIBLE);
             jifenLayout.setVisibility(View.GONE);
-            if(laJiBean.money>0&&wei!=null)
-                price.setText(laJiBean.money*zhongliang+"元");
+            if(laJiBean.money>0&&wei!=null){
+                BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                price.setText(f1+"元");
+            }
         }else if (laJiBean.rewardsMode.equals("Both")){
             priceLayout.setVisibility(View.VISIBLE);
             jifenLayout.setVisibility(View.VISIBLE);
-            if(laJiBean.money>0&&wei!=null)
-                price.setText(laJiBean.money*zhongliang+"元");
+            if(laJiBean.money>0&&wei!=null){
+                BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                price.setText(f1+"元");
+            }
             if(laJiBean.score>0&&wei!=null)
-                jifen.setText(laJiBean.score*zhongliang+"");
+                jifen.setText((int)Math.ceil(laJiBean.score*zhongliang)+"");
         }else {
             priceLayout.setVisibility(View.GONE);
             jifenLayout.setVisibility(View.VISIBLE);
             if(laJiBean.score>0&&wei!=null)
-                jifen.setText(laJiBean.score*zhongliang+"");
+                jifen.setText((int)Math.ceil(laJiBean.score*zhongliang)+"");
 
         }
     }
@@ -138,6 +145,7 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
             for (int i = 0; i < homePage.data.size(); i++) {
                 if (homePage.data.get(i).id == lajiId) {
                     laJiBean = homePage.data.get(i);
+                    break;
                 }
             }
         } catch (JSONException e) {
@@ -161,16 +169,25 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
                 Toast.makeText(context, "请选择垃圾类型", Toast.LENGTH_LONG).show();
                 return;
             }
+            zhongliang=(Double.parseDouble(Maowei)-Double.parseDouble(wei));
+            if (zhongliang<=0){
+                Toast.makeText(context,"毛重应大于皮重!",Toast.LENGTH_LONG).show();
+           return;
+            }
             if(data!=null){
                 try {
                     data.put("weight",zhongliang+"");
                     if (laJiBean.rewardsMode.equals("Money")) {
-                        data.put("money",laJiBean.money * zhongliang + "");
+                            BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                            double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                            data.put("money",f1 + "");
                     } else if (laJiBean.rewardsMode.equals("Both")) {
-                        data.put("score",laJiBean.score*zhongliang+"");
-                        data.put("money",laJiBean.money * zhongliang + "");
+                        data.put("score",(int)Math.ceil(laJiBean.score*zhongliang)+"");
+                        BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                        double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                        data.put("money",f1 + "");
                     } else {
-                        data.put("score",laJiBean.score*zhongliang+"");
+                        data.put("score",(int)Math.ceil(laJiBean.score*zhongliang)+"");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -194,7 +211,8 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
     @Override
     public void afterTextChanged(Editable s) {
         wei=s.toString();
-        if (wei!=null&&!wei.equals(""))
-        setWei(wei);
+        if (wei!=null&&!wei.equals("")) {
+            setWei(wei);
+        }
     }
 }

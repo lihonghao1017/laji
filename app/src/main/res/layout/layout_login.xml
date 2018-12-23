@@ -16,7 +16,7 @@
         <com.mapbar.scale.ScaleImageView
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:src="@mipmap/newlog333" />
+            android:src="@mipmap/fencheicon" />
         <com.mapbar.scale.ScaleTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -144,10 +144,10 @@
             <com.mapbar.scale.ScaleTextView
                 android:id="@+id/weiText"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="9.99"
+                android:layout_height="55dp"
+                android:text="0"
                 android:textColor="@android:color/holo_red_light"
-                android:textSize="30dp" />
+                android:textSize="50dp" />
 
             <View
                 android:id="@+id/weiTextBlow"
@@ -162,7 +162,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="kg"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="@color/baseColor"
             android:textSize="34dp" />
     </com.mapbar.scale.ScaleLinearLayout>
 

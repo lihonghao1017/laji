@@ -10,8 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sucetech.yijiamei.R;
@@ -28,6 +31,7 @@ public class XiaoQuDailog extends Dialog implements View.OnClickListener, Adapte
     private XiaoQuAdapter bluthAdapter;
     private Context context;
     private HomePage homePage;
+    private EditText search;
 
     public XiaoQuDailog(Context context, HomePage homePage) {
         super(context, R.style.BottomDialog);
@@ -36,8 +40,22 @@ public class XiaoQuDailog extends Dialog implements View.OnClickListener, Adapte
         View view = LayoutInflater.from(context).inflate(R.layout.xiaoqu_layout, null);
         listView = view.findViewById(R.id.boluthList);
         view.findViewById(R.id.bluthClose).setOnClickListener(this);
-
+        search= view.findViewById(R.id.input);
         setContentView(view);
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(final TextView v, int actionId,
+                                          KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    final String searText = v.getText().toString();
+                    if (searText != null && !searText.equals(""))
+
+                    return true;
+                }
+                return false;
+            }
+        });
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay(); //获取屏幕宽高

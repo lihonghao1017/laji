@@ -110,9 +110,10 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
                 }
                 this.mCommitLajiBean.lajiName=this.mCommitLajiBean.laJiBean.name;
                 this.mCommitLajiBean.type=mCommitLajiBean.laJiBean.rewardsMode;
+
+                this.mCommitLajiBean.wei=data.optString("weight");
                 this.mCommitLajiBean.price=data.optString("money");
                 this.mCommitLajiBean.jifen= data.optString("score");
-                this.mCommitLajiBean.wei=data.optString("weight");
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -123,7 +124,7 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
         if ( this.mCommitLajiBean.type.equals("Money")) {
             commitMsg.setText("本次称重可以获得" + this.mCommitLajiBean.price + "元现金");
         } else if ( this.mCommitLajiBean.type.equals("Both")) {
-            commitMsg.setText("本次称重可以获得" + this.mCommitLajiBean.price + "元现金," + this.mCommitLajiBean.price + "积分");
+            commitMsg.setText("本次称重可以获得" + this.mCommitLajiBean.price + "元现金," + this.mCommitLajiBean.jifen + "积分");
         } else {
             commitMsg.setText("本次称重可以获得" + this.mCommitLajiBean.jifen + "积分");
         }
@@ -213,13 +214,7 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
             case R.id.bottom02:
                 break;
             case R.id.bottom03:
-                TaskManager.getInstance().addTask(new Runnable() {
-                    @Override
-                    public void run() {
-                        upLoadFile();
-                    }
-                });
-
+                showExit();
                 break;
             case R.id.voice:
                 playAudio();
@@ -343,5 +338,24 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
             e.printStackTrace();
             Log.e("LLL", "IOException--->" + e.toString());
         }
+    }
+    private void showExit(){
+        MakeSureDialog dialog = new MakeSureDialog();
+        dialog.setDialogClickListener(new MakeSureDialog.onDialogClickListener() {
+            @Override
+            public void onSureClick() {
+                TaskManager.getInstance().addTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        upLoadFile();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelClick() {
+            }
+        });
+        dialog.show(((MainActivity)getContext()).getFragmentManager(),"");
     }
 }
