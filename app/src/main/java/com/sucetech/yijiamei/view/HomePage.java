@@ -161,6 +161,7 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
             case R.id.back:
                 back.setVisibility(View.GONE);
                 commitView.setVisibility(View.GONE);
+                bottmLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.searchBurron:
                 if (search.getText().toString()!=null&&!search.getText().toString().equals("")){
@@ -314,6 +315,7 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
             @Override
             public void run() {
                 onClick(back);
+
             }
         });
     }

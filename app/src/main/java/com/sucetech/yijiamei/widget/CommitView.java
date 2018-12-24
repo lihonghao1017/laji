@@ -327,6 +327,7 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
                 if (!isOnceSend){
                     UserMsg.savePizhongByCarId(homePage.juMinBean.carNub,"");
                 }
+                commitOK();
                 homePage.commitOK();
 
                 Log.e("LLL", "ok--->" + response.body().string());
@@ -338,6 +339,17 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
             e.printStackTrace();
             Log.e("LLL", "IOException--->" + e.toString());
         }
+    }
+    private void commitOK(){
+        this.post(new Runnable() {
+            @Override
+            public void run() {
+                img.setImageBitmap(null);
+                img.setTag(null);
+                voice.setVisibility(View.GONE);
+                audioPath=null;
+            }
+        });
     }
     private void showExit(){
         MakeSureDialog dialog = new MakeSureDialog();

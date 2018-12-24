@@ -118,11 +118,46 @@
 
     </com.mapbar.scale.ScaleLinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/bottmLayout"
+        android:layout_width="match_parent"
+        android:layout_below="@id/tabLayout"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="60dp">
+        <Button
+            android:id="@+id/searchBurron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+android:layout_centerVertical="true"
+            android:background="@mipmap/searchiiiicon"
+            android:layout_alignParentRight="true"
+
+            android:textColor="@android:color/white"
+            android:text="查找"/>
+        <EditText
+            android:id="@+id/searchUser"
+            android:layout_toLeftOf="@id/searchBurron"
+            android:layout_width="match_parent"
+            android:hint="请输入电话号码"
+            android:background="@android:color/transparent"
+            android:inputType="number"
+            android:layout_height="match_parent" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/searchBurron"
+            android:layout_height="1dp"
+            android:background="#DBDBDB"/>
+
+    </RelativeLayout>
+
     <com.mapbar.scale.ScaleLinearLayout
         android:id="@+id/weiLayout"
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:layout_below="@id/tabLayout"
+        android:layout_below="@id/bottmLayout"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -207,26 +242,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/titleLayout"
         android:visibility="gone" />
-    <RelativeLayout
-        android:id="@+id/bottmLayout"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_height="60dp">
-        <Button
-            android:id="@+id/searchBurron"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:text="查找"/>
-        <EditText
-            android:id="@+id/searchUser"
-            android:layout_toLeftOf="@id/searchBurron"
-            android:layout_width="match_parent"
-            android:hint="请输入电话号码"
-            android:inputType="number"
-            android:layout_height="match_parent" />
 
-    </RelativeLayout>
 
 
 </RelativeLayout>
