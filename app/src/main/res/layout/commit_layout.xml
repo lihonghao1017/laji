@@ -9,10 +9,10 @@
         android:id="@+id/lajiType"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#cdcdcd"
+        android:background="#EEEEEE"
         android:gravity="center"
         android:text="铁"
-        android:textColor="@color/baseColor"
+        android:textColor="#4DA9E8"
         android:textSize="26dp" />
 
     <com.mapbar.scale.ScaleLinearLayout
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="重量"
-            android:textColor="#cdcdcd"
+            android:textColor="#C6C6C6"
             android:textSize="20dp" />
 
         <com.mapbar.scale.ScaleLinearLayout
@@ -51,7 +51,7 @@
                 android:layout_height="1dp"
                 android:layout_below="@id/juminMsgLayout"
                 android:layout_marginTop="10dp"
-                android:background="@android:color/holo_blue_light" />
+                android:background="#DBDBDB" />
         </com.mapbar.scale.ScaleLinearLayout>
 
         <com.mapbar.scale.ScaleTextView
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="kg"
-            android:textColor="#C3C3C3"
+            android:textColor="#C6C6C6"
             android:textSize="26dp" />
     </com.mapbar.scale.ScaleLinearLayout>
 
@@ -69,7 +69,7 @@
         android:layout_height="1dp"
         android:layout_below="@id/juminMsgLayout"
         android:layout_marginTop="10dp"
-        android:background="@android:color/holo_blue_light" />
+        android:background="#DBDBDB" />
 
     <com.mapbar.scale.ScaleRelativeLayout
         android:id="@+id/juminMsgLayout"
@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="姓名"
-            android:textColor="#C3C3C3"
+            android:textColor="#C6C6C6"
             android:textSize="26dp" />
 
         <com.mapbar.scale.ScaleTextView
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/nameStr"
-            android:textColor="#C3C3C3"
+            android:textColor="#4A4A4A"
             android:textSize="26dp" />
 
         <com.mapbar.scale.ScaleTextView
@@ -105,7 +105,7 @@
             android:layout_below="@id/nameStr"
             android:layout_marginTop="10dp"
             android:text="电话"
-            android:textColor="#C3C3C3"
+            android:textColor="#C6C6C6"
             android:textSize="26dp" />
 
         <com.mapbar.scale.ScaleTextView
@@ -116,7 +116,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/phontStr"
-            android:textColor="#C3C3C3"
+            android:textColor="#4A4A4A"
             android:textSize="26dp" />
 
         <com.mapbar.scale.ScaleTextView
@@ -126,7 +126,7 @@
             android:layout_below="@id/phontStr"
             android:layout_marginTop="10dp"
             android:text="卡号"
-            android:textColor="#C3C3C3"
+            android:textColor="#C6C6C6"
             android:textSize="26dp" />
 
         <com.mapbar.scale.ScaleTextView
@@ -137,7 +137,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/carStr"
-            android:textColor="#C3C3C3"
+            android:textColor="#4A4A4A"
             android:textSize="26dp" />
         <com.mapbar.scale.ScaleTextView
             android:id="@+id/commitMsg"
@@ -145,7 +145,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/carStr"
             android:layout_marginTop="10dp"
-            android:textColor="#C3C3C3"
+            android:textColor="#4A4A4A"
             android:textSize="26dp" />
 
     </com.mapbar.scale.ScaleRelativeLayout>
@@ -156,7 +156,7 @@
         android:layout_height="1dp"
         android:layout_below="@id/juminMsgLayout"
         android:layout_marginTop="10dp"
-        android:background="@android:color/holo_blue_light" />
+        android:background="#DBDBDB" />
 
     <com.mapbar.scale.ScaleLinearLayout
         android:id="@+id/imgLayout"
@@ -258,7 +258,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_weight="1.3"
-            android:background="@android:color/holo_red_dark"
+            android:background="#F27360"
             android:gravity="center"
             android:orientation="vertical">
 

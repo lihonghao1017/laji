@@ -26,7 +26,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:text="居民信息"
-            android:textColor="@android:color/holo_blue_light"
+            android:textColor="#848484"
             android:textSize="26dp" />
 
         <View
@@ -35,7 +35,7 @@
             android:layout_height="1dp"
             android:layout_below="@id/jumintitle"
             android:layout_marginTop="20dp"
-            android:background="@android:color/holo_blue_light" />
+            android:background="#D0D0D0" />
 
         <com.mapbar.scale.ScaleRelativeLayout
             android:id="@+id/juminMsgLayout"
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@id/nameStr"
-                android:textColor="#C3C3C3"
+                android:textColor="#414141"
                 android:textSize="26dp" />
 
             <com.mapbar.scale.ScaleTextView
@@ -82,8 +82,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/phontStr"
-                android:text="11111111"
-                android:textColor="#C3C3C3"
+                android:textColor="#414141"
                 android:textSize="26dp" />
 
             <com.mapbar.scale.ScaleTextView
@@ -104,7 +103,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/carStr"
-                android:textColor="#C3C3C3"
+                android:textColor="#414141"
                 android:textSize="26dp" />
 
         </com.mapbar.scale.ScaleRelativeLayout>
@@ -116,7 +115,7 @@
             android:layout_height="1dp"
             android:layout_below="@id/juminMsgLayout"
             android:layout_marginTop="20dp"
-            android:background="@android:color/holo_blue_light" />
+            android:background="#D0D0D0" />
 
         <com.mapbar.scale.ScaleRelativeLayout
             android:id="@+id/weipriceLayout"
@@ -153,7 +152,7 @@
                         android:id="@+id/jifen"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:textColor="#C3C3C3"
+                        android:textColor="#414141"
                         android:textSize="26dp" />
 
                     <View
@@ -194,7 +193,7 @@
                         android:id="@+id/price"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:textColor="#C3C3C3"
+                        android:textColor="#414141"
                         android:textSize="26dp" />
 
                     <View
@@ -245,7 +244,7 @@
                             android:background="@android:color/transparent"
                             android:digits="1234567890."
                             android:gravity="center"
-                            android:textColor="#C3C3C3"
+                            android:textColor="#414141"
                             android:textSize="26dp" />
 
                         <com.mapbar.scale.ScaleTextView
@@ -275,7 +274,7 @@
             android:layout_height="1dp"
             android:layout_below="@id/weipriceLayout"
             android:layout_marginTop="20dp"
-            android:background="@android:color/holo_blue_light" />
+            android:background="#D0D0D0" />
 
         <com.mapbar.scale.ScaleRelativeLayout
             android:id="@+id/fenleiLayout"

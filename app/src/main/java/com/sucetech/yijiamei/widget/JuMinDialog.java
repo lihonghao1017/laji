@@ -81,14 +81,6 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         phone.setText(homePage.juMinBean.phone);
         carNub.setText(homePage.juMinBean.carNub);
         weiText= view.findViewById(R.id.wei);
-        if (homePage.BluthStuta!=weied){
-            weiText.addTextChangedListener(this);
-            weiText.setFocusable(true);
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (view !=null && imm != null){
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);  //强制隐藏
-            }
-        }
         weiText.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         priceStr=view.findViewById(R.id.priceStr);
         jifen=view.findViewById(R.id.jifen);
@@ -109,6 +101,9 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         layoutParams.height = (int) (point.y); //高度设置为屏幕高度的0.5
         window.setAttributes(layoutParams);
         lajis = homePage.data;
+        for (int i = 0; i <lajis.size() ; i++) {
+            lajis.get(i).isSelected=false;
+        }
         if(lajis!=null&&lajis.size()>0){
             lajis.get(0).isSelected=true;
             laJiBean=lajis.get(0);
@@ -124,6 +119,14 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
             }
         });
         bluthAdapter.notifyDataSetChanged();
+        if (homePage.BluthStuta==weied){
+//            weiText.setFocusable(true);
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+//            imm.hideSoftInputFromWindow(weiText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            imm.hideSoftInputFromWindow(weiText.getWindowToken(), 0); //强制隐藏键盘
+        }else{
+            weiText.addTextChangedListener(this);
+        }
     }
 
 private int position=-1;
