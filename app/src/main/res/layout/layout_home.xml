@@ -206,5 +206,26 @@
         android:layout_height="match_parent"
         android:layout_below="@id/titleLayout"
         android:visibility="gone" />
+    <RelativeLayout
+        android:id="@+id/bottmLayout"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="60dp">
+        <Button
+            android:id="@+id/searchBurron"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:text="查找"/>
+        <EditText
+            android:id="@+id/searchUser"
+            android:layout_toLeftOf="@id/searchBurron"
+            android:layout_width="match_parent"
+            android:hint="请输入电话号码"
+            android:inputType="number"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

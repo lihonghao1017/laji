@@ -57,14 +57,14 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
         if (weiText != null)
             weiText.setText(wei);
         zhongliang=(Double.parseDouble(Maowei)-Double.parseDouble(wei));
-        if (zhongliang<=0){
-            Toast.makeText(context,"皮重大于等于毛重!",Toast.LENGTH_LONG).show();
-        }
+//        if (zhongliang<=0){
+//            Toast.makeText(context,"皮重大于等于毛重!",Toast.LENGTH_LONG).show();
+//        }
         if (laJiBean.rewardsMode.equals("Money")){
             priceLayout.setVisibility(View.VISIBLE);
             jifenLayout.setVisibility(View.GONE);
             if(laJiBean.money>0&&wei!=null){
-                BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                BigDecimal bg = new BigDecimal(laJiBean.money*zhongliang);
                 double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 price.setText(f1+"元");
             }
@@ -72,7 +72,7 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
             priceLayout.setVisibility(View.VISIBLE);
             jifenLayout.setVisibility(View.VISIBLE);
             if(laJiBean.money>0&&wei!=null){
-                BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                BigDecimal bg = new BigDecimal(laJiBean.money*zhongliang);
                 double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 price.setText(f1+"元");
             }
@@ -178,12 +178,12 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
                 try {
                     data.put("weight",zhongliang+"");
                     if (laJiBean.rewardsMode.equals("Money")) {
-                            BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                            BigDecimal bg = new BigDecimal(laJiBean.money*zhongliang);
                             double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                             data.put("money",f1 + "");
                     } else if (laJiBean.rewardsMode.equals("Both")) {
                         data.put("score",(int)Math.ceil(laJiBean.score*zhongliang)+"");
-                        BigDecimal bg = new BigDecimal(laJiBean.money*Float.parseFloat(wei));
+                        BigDecimal bg = new BigDecimal(laJiBean.money*zhongliang);
                         double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                         data.put("money",f1 + "");
                     } else {

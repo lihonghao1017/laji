@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -60,6 +61,8 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
             public void run() {
                 if (weiText!=null)
                     weiText.setText(JuMinDialog.this.wei);
+                if (JuMinDialog.this.position>-1)
+                    onItemClick(null,null, JuMinDialog.this.position,-1);
             }
         });
 
@@ -80,6 +83,11 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         weiText= view.findViewById(R.id.wei);
         if (homePage.BluthStuta!=weied){
             weiText.addTextChangedListener(this);
+            weiText.setFocusable(true);
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (view !=null && imm != null){
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);  //强制隐藏
+            }
         }
         weiText.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         priceStr=view.findViewById(R.id.priceStr);
@@ -101,6 +109,11 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         layoutParams.height = (int) (point.y); //高度设置为屏幕高度的0.5
         window.setAttributes(layoutParams);
         lajis = homePage.data;
+        if(lajis!=null&&lajis.size()>0){
+            lajis.get(0).isSelected=true;
+            laJiBean=lajis.get(0);
+            position=0;
+        }
         bluthAdapter = new LajiFenLeiAdapter(context, lajis);
         lajiGridView.setAdapter(bluthAdapter);
         lajiGridView.setOnItemClickListener(this);
@@ -125,6 +138,9 @@ private int position=-1;
         bluthAdapter.notifyDataSetChanged();
         if (laJiBean.rewardsMode==null){
             Toast.makeText(context,"数据异常",Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (wei==null||wei.equals("")){
             return;
         }
         if (laJiBean.rewardsMode.equals("Money")){
@@ -165,7 +181,7 @@ private int position=-1;
         if (v.getId() == R.id.cansle) {
             dismiss();
         }else if(v.getId() == R.id.commit){
-            if (laJiBean==null||wei==null){
+            if (laJiBean==null||wei==null||wei.equals("")){
                 Toast.makeText(context,"请选择垃圾类型",Toast.LENGTH_LONG).show();
                 return;
             }

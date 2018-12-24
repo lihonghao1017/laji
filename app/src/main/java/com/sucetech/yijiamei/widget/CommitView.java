@@ -122,11 +122,11 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
         lajiType.setText( this.mCommitLajiBean.lajiName);
         wei.setText( this.mCommitLajiBean.wei + "");
         if ( this.mCommitLajiBean.type.equals("Money")) {
-            commitMsg.setText("本次称重可以获得" + this.mCommitLajiBean.price + "元现金");
+            commitMsg.setText("获得金额" + this.mCommitLajiBean.price + "元");
         } else if ( this.mCommitLajiBean.type.equals("Both")) {
-            commitMsg.setText("本次称重可以获得" + this.mCommitLajiBean.price + "元现金," + this.mCommitLajiBean.jifen + "积分");
+            commitMsg.setText("获得金额" + this.mCommitLajiBean.price + "元," +"积分"+ this.mCommitLajiBean.jifen + "个");
         } else {
-            commitMsg.setText("本次称重可以获得" + this.mCommitLajiBean.jifen + "积分");
+            commitMsg.setText("获得积分" + this.mCommitLajiBean.jifen + "个");
         }
     }
 

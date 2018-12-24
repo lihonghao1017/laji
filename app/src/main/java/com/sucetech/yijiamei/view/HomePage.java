@@ -8,11 +8,13 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import com.mapbar.android.model.FilterObj;
 import com.mapbar.android.model.Log;
 import com.mapbar.android.model.PageRestoreData;
 import com.sucetech.yijiamei.Configs;
+import com.sucetech.yijiamei.MainActivity;
 import com.sucetech.yijiamei.R;
 import com.sucetech.yijiamei.UserMsg;
 import com.sucetech.yijiamei.model.CommitLajiBean;
@@ -31,16 +34,24 @@ import com.sucetech.yijiamei.model.LaJiBean;
 import com.sucetech.yijiamei.model.XiaoQuBean;
 import com.sucetech.yijiamei.provider.BluthConnectTool;
 import com.sucetech.yijiamei.provider.NFCTool;
+import com.sucetech.yijiamei.provider.TaskManager;
 import com.sucetech.yijiamei.widget.BluthDailog;
 import com.sucetech.yijiamei.widget.CommitView;
 import com.sucetech.yijiamei.widget.JuMinDialog;
 import com.sucetech.yijiamei.widget.MaoWeiDialog;
 import com.sucetech.yijiamei.widget.XiaoQuDailog;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class HomePage extends BasePage implements OnClickListener, BluthConnectTool.BluthStutaListener {
     private final static String TAG = "HomePage";
@@ -59,6 +70,10 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
     public boolean isOneWEi=true;
     private CommitView commitView;
     public List<LaJiBean> data;
+
+    private View searchBurron;
+    private EditText search;
+    private View bottmLayout;
 
 //    private Handler mHandler=new Handler();
 //    private void  sendTime(){
@@ -80,6 +95,7 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
         tabwei02 = view.findViewById(R.id.tabLayout02);
         commitView= view.findViewById(R.id.CommitView);
         commitView.setHomePage(this);
+        bottmLayout=view.findViewById(R.id.bottmLayout);
 //        camore.setOnClickListener(this);
 //        voice.setOnClickListener(this);
 //        commit.setOnClickListener(this);
@@ -90,6 +106,10 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
         tabCursor02 = view.findViewById(R.id.tabCursor02);
         back= view.findViewById(R.id.back);
         back.setOnClickListener(this);
+        searchBurron=view.findViewById(R.id.searchBurron);
+        searchBurron.setOnClickListener(this);
+        search=view.findViewById(R.id.searchUser);
+        search.setInputType(InputType.TYPE_CLASS_NUMBER);
     }
     private void showBluthDailog(){
         bluthConnectTool = new BluthConnectTool(mContext, this);
@@ -142,7 +162,76 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
                 back.setVisibility(View.GONE);
                 commitView.setVisibility(View.GONE);
                 break;
+            case R.id.searchBurron:
+                if (search.getText().toString()!=null&&!search.getText().toString().equals("")){
+                    TaskManager.getInstance().addTask(new Runnable() {
+                        @Override
+                        public void run() {
+                            sendData(search.getText().toString());
+                        }
+                    });
+
+                }
+                break;
         }
+    }
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    private void sendData(String phone) {
+        Request request = new Request.Builder()
+                .url(Configs.baseUrl + ":8081/datong/v1/residents/cellphone/"+phone)
+                .get()
+                .build();
+        try {
+            final Response response = ((MainActivity) mContext).client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                try {
+                    JSONObject object=new JSONObject(response.body().string());
+                    JuMinBean jbean= new JuMinBean();
+                    jbean.name=object.optString("name");
+                    jbean.phone=object.optString("cellphone");
+                    searchOK(jbean);
+                } catch (JSONException e) {
+                    searchError();
+                    e.printStackTrace();
+                }
+
+            } else {
+                android.util.Log.e("LLL", "shibai--->");
+                searchError();
+                throw new IOException("Unexpected code " + response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            searchError();
+            android.util.Log.e("LLL", "IOException--->" + e.toString());
+        }
+    }
+    private void searchError(){
+        search.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(mContext,"没有此居民",Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    private void searchOK(final JuMinBean juMinBean){
+        this.juMinBean=juMinBean;
+        search.post(new Runnable() {
+            @Override
+            public void run() {
+                if (juMinBean!=null){
+                    if (!isOneWEi&&UserMsg.getPizhongByCarId(juMinBean.carNub)!=null&&!UserMsg.getPizhongByCarId(juMinBean.carNub).equals("")){
+                        maoWeiDialog=new MaoWeiDialog(mContext,HomePage.this);
+                        maoWeiDialog.show();
+                    }else{
+                        juMinDialog=new JuMinDialog(mContext,HomePage.this);
+                        juMinDialog.show();
+                    }
+                    bottmLayout.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override
@@ -194,6 +283,7 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
                     juMinDialog=new JuMinDialog(mContext,this);
                     juMinDialog.show();
                 }
+                bottmLayout.setVisibility(View.GONE);
             }else{
                 Toast.makeText(mContext, "卡信息异常", Toast.LENGTH_LONG).show();
             }
