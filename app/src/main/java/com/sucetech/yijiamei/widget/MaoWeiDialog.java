@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +44,7 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
     private HomePage homePage;
     private TextView name, phone, carNub, priceStr;
     private LaJiBean laJiBean;
-    private TextView weiText;
+    private EditText weiText;
     private View priceLayout, jifenLayout;
     private TextView jifen, price;
     private String wei;

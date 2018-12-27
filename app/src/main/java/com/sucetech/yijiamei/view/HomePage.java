@@ -225,9 +225,21 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
                     if (!isOneWEi&&UserMsg.getPizhongByCarId(juMinBean.carNub)!=null&&!UserMsg.getPizhongByCarId(juMinBean.carNub).equals("")){
                         maoWeiDialog=new MaoWeiDialog(mContext,HomePage.this);
                         maoWeiDialog.show();
+                        maoWeiDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                bottmLayout.setVisibility(View.VISIBLE);
+                            }
+                        });
                     }else{
                         juMinDialog=new JuMinDialog(mContext,HomePage.this);
                         juMinDialog.show();
+                        juMinDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                bottmLayout.setVisibility(View.VISIBLE);
+                            }
+                        });
                     }
                     bottmLayout.setVisibility(View.GONE);
                 }
