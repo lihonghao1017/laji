@@ -102,9 +102,6 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
 
 
         weiText = view.findViewById(R.id.wei);
-        if (homePage.BluthStuta!=weied){
-            weiText.addTextChangedListener(this);
-        }
         weiText.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         priceStr = view.findViewById(R.id.priceStr);
         jifen = view.findViewById(R.id.jifen);
@@ -131,6 +128,16 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
 
             }
         });
+        if (homePage.BluthStuta==weied){
+            name.setFocusable(true);
+            name.setFocusableInTouchMode(true);
+            name.requestFocus();
+        }else{
+            weiText.setFocusable(true);
+            weiText.setFocusableInTouchMode(true);
+            weiText.requestFocus();
+            weiText.addTextChangedListener(this);
+        }
     }
 
     private JSONObject data;

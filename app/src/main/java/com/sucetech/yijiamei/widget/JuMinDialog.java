@@ -120,11 +120,13 @@ public class JuMinDialog extends Dialog implements View.OnClickListener, Adapter
         });
         bluthAdapter.notifyDataSetChanged();
         if (homePage.BluthStuta==weied){
-//            weiText.setFocusable(true);
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-//            imm.hideSoftInputFromWindow(weiText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            imm.hideSoftInputFromWindow(weiText.getWindowToken(), 0); //强制隐藏键盘
+            name.setFocusable(true);
+            name.setFocusableInTouchMode(true);
+            name.requestFocus();
         }else{
+            weiText.setFocusable(true);
+            weiText.setFocusableInTouchMode(true);
+            weiText.requestFocus();
             weiText.addTextChangedListener(this);
         }
     }

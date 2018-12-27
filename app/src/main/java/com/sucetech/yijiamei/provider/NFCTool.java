@@ -5,12 +5,37 @@ import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Parcelable;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.Arrays;
 
 public class NFCTool {
+    public  static String getCardId(Intent intent){
+        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        byte[] tagId = tag.getId();
+        Log.e("LLL",tagId+"");
+        String str = ByteArrayToHexString(tagId);
+        return str;
+    }
+    private static String ByteArrayToHexString(byte[] inarray) {
+        int i, j, in;
+        String[] hex = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A",
+                "B", "C", "D", "E", "F" };
+        String out = "";
+
+
+        for (j = 0; j < inarray.length; ++j) {
+            in = (int) inarray[j] & 0xff;
+            i = (in >> 4) & 0x0f;
+            out += hex[i];
+            i = in & 0x0f;
+            out += hex[i];
+        }
+        return out;
+    }
 
     public static String getPhone(Intent intent){
         Parcelable[] rawMsgs = intent.getParcelableArrayExtra(

@@ -270,25 +270,31 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
 //                showBluthDailog();
 //                return;
 //            }
-            String phon = NFCTool.getPhone((Intent) o);
-            String[] use=phon.split(":");
-            if (use.length>2){
-                juMinBean= new JuMinBean();
-                juMinBean.carNub=use[2];
-                juMinBean.name=use[0];
-                juMinBean.phone=use[1];
-                if (!isOneWEi&&UserMsg.getPizhongByCarId(juMinBean.carNub)!=null&&!UserMsg.getPizhongByCarId(juMinBean.carNub).equals("")){
-                    maoWeiDialog=new MaoWeiDialog(mContext,this);
-                    maoWeiDialog.show();
-                }else{
-                    juMinDialog=new JuMinDialog(mContext,this);
-                    juMinDialog.show();
-                }
-                bottmLayout.setVisibility(View.GONE);
+            final String cardId = NFCTool.getCardId((Intent) o);
+//            String[] use=phon.split(":");
+            if (cardId!=null&&!cardId.equals("")){
+//                juMinBean= new JuMinBean();
+//                juMinBean.carNub=use[2];
+//                juMinBean.name=use[0];
+//                juMinBean.phone=use[1];
+                TaskManager.getInstance().addTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        getUserMsg(cardId);
+                    }
+                });
+//                if (!isOneWEi&&UserMsg.getPizhongByCarId(juMinBean.carNub)!=null&&!UserMsg.getPizhongByCarId(juMinBean.carNub).equals("")){
+//                    maoWeiDialog=new MaoWeiDialog(mContext,this);
+//                    maoWeiDialog.show();
+//                }else{
+//                    juMinDialog=new JuMinDialog(mContext,this);
+//                    juMinDialog.show();
+//                }
+//                bottmLayout.setVisibility(View.GONE);
             }else{
                 Toast.makeText(mContext, "卡信息异常", Toast.LENGTH_LONG).show();
             }
-            Toast.makeText(mContext, phon, Toast.LENGTH_LONG).show();
+//            Toast.makeText(mContext, phon, Toast.LENGTH_LONG).show();
         }else if(o instanceof FormImage){
             commitView.showImg((FormImage) o);
         }
@@ -319,4 +325,36 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
             }
         });
     }
+    public void getUserMsg(final String cardId){
+        Request request = new Request.Builder()
+                .url(Configs.baseUrl + ":8081/datong/v1/residents/"+cardId)
+                .get()
+                .build();
+        try {
+            final Response response = ((MainActivity) mContext).client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                try {
+                    JSONObject object=new JSONObject(response.body().string());
+                    JuMinBean jbean= new JuMinBean();
+                    jbean.name=object.optString("name");
+                    jbean.phone=object.optString("cellphone");
+                    jbean.carNub=cardId;
+                    searchOK(jbean);
+                } catch (JSONException e) {
+                    searchError();
+                    e.printStackTrace();
+                }
+
+            } else {
+                android.util.Log.e("LLL", "shibai--->");
+                searchError();
+                throw new IOException("Unexpected code " + response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            searchError();
+            android.util.Log.e("LLL", "IOException--->" + e.toString());
+        }
+    }
+
 }
