@@ -13,12 +13,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sucetech.yijiamei.MainActivity;
 import com.sucetech.yijiamei.R;
 import com.sucetech.yijiamei.UserMsg;
 import com.sucetech.yijiamei.adapter.LajiFenLeiAdapter;
@@ -40,7 +42,7 @@ import static com.sucetech.yijiamei.provider.BluthConnectTool.BluthStutaListener
 
 public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWatcher {
     private List<LaJiBean> lajis;
-    private Context context;
+    private Context mcontext;
     private HomePage homePage;
     private TextView name, phone, carNub, priceStr;
     private LaJiBean laJiBean;
@@ -90,7 +92,7 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
 
     public MaoWeiDialog(Context context, HomePage homePage) {
         super(context, R.style.BottomDialog);
-        this.context = context;
+        mcontext = context;
         this.homePage = homePage;
         initData();
         View view = LayoutInflater.from(context).inflate(R.layout.second_jumin_layout, null);
@@ -134,11 +136,17 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
             name.setFocusableInTouchMode(true);
             name.requestFocus();
         }else{
-            weiText.setFocusable(true);
-            weiText.setFocusableInTouchMode(true);
-            weiText.requestFocus();
-            weiText.addTextChangedListener(this);
+            weiText.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    InputMethodManager inputMethodManager = (InputMethodManager) ((MainActivity)mcontext).getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                    inputMethodManager.showSoftInput(weiText,InputMethodManager.SHOW_FORCED);
+                }
+            },200);
         }
+
+
     }
 
     private JSONObject data;
@@ -174,12 +182,12 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
             dismiss();
         } else if (v.getId() == R.id.commit) {
             if (laJiBean == null) {
-                Toast.makeText(context, "请选择垃圾类型", Toast.LENGTH_LONG).show();
+                Toast.makeText(mcontext, "请选择垃圾类型", Toast.LENGTH_LONG).show();
                 return;
             }
             zhongliang=(Double.parseDouble(Maowei)-Double.parseDouble(wei));
             if (zhongliang<=0){
-                Toast.makeText(context,"毛重应大于皮重!",Toast.LENGTH_LONG).show();
+                Toast.makeText(mcontext,"毛重应大于皮重!",Toast.LENGTH_LONG).show();
            return;
             }
             if(data!=null){
