@@ -136,6 +136,7 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
             name.setFocusableInTouchMode(true);
             name.requestFocus();
         }else{
+            weiText.addTextChangedListener(this);
             weiText.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -181,8 +182,8 @@ public class MaoWeiDialog extends Dialog implements View.OnClickListener,TextWat
         if (v.getId() == R.id.cansle) {
             dismiss();
         } else if (v.getId() == R.id.commit) {
-            if (laJiBean == null) {
-                Toast.makeText(mcontext, "请选择垃圾类型", Toast.LENGTH_LONG).show();
+            if (laJiBean==null||wei==null||wei.equals("")){
+                Toast.makeText(mcontext,"请输入重量",Toast.LENGTH_LONG).show();
                 return;
             }
             zhongliang=(Double.parseDouble(Maowei)-Double.parseDouble(wei));
