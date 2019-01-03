@@ -253,7 +253,15 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
         switch (type) {
             case weied:
                 Log.e("LLL", "onBluthStutaListener--->" + (String) obj);
-                final String we = (String) obj;
+                String we = (String) obj;
+                if (we!=null&&we.length()>0){
+                    for (int i = 0; i <we.length() ; i++) {
+                        if (we.charAt(i)>=48 && we.charAt(i)<=57){
+                            we=we.substring(i,we.length()-1);
+                            break;
+                        }
+                    }
+                }
                 wei.setText(we + "");
                 if (juMinDialog!=null&&juMinDialog.isShowing()){
                     juMinDialog.setWei(we);

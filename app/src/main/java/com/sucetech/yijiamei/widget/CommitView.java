@@ -287,14 +287,17 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
                     if (fifi[0].contains(".jpg")) {
                         rootJson.put("image", fifi[0]);
                     }
-                    if (fifi.length > 1) {
+                    if (fifi[0].contains(".m4a")) {
+                        rootJson.put("audio", fifi[0]);
+                    }
+                    if (fifi.length > 1)  {
                         rootJson.put("audio", fifi[1]);
                     }
                 }
                 if (mCommitLajiBean.price !=null){
                     rootJson.put("money", (int)Double.parseDouble(mCommitLajiBean.price));
                 }
-                if (mCommitLajiBean.price !=null){
+                if (mCommitLajiBean.jifen  !=null){
                     rootJson.put("score", (int)Double.parseDouble(mCommitLajiBean.jifen));
                 }
             }
