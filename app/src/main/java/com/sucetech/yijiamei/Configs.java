@@ -1,10 +1,15 @@
 package  com.sucetech.yijiamei;
 
 
+import com.sucetech.yijiamei.model.XiaoQuBean;
+
+import java.util.List;
+
 public class Configs
 {
 	public static  String baseUrl="http://www.yijiamei.net";
 	public final static boolean isDebug = false;
+	public static List<XiaoQuBean> xiaoQuBeanList;
 	
 	public final static String SOFT_VERSION = "1.0.0";
 	

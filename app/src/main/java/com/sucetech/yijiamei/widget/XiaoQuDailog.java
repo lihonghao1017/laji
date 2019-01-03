@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sucetech.yijiamei.Configs;
 import com.sucetech.yijiamei.R;
 import com.sucetech.yijiamei.adapter.XiaoQuAdapter;
 import com.sucetech.yijiamei.model.XiaoQuBean;
@@ -67,7 +68,7 @@ public class XiaoQuDailog extends Dialog implements View.OnClickListener, Adapte
         layoutParams.width = (int) (point.x); //宽度设置为屏幕宽度的0.5
         layoutParams.height = (int) (point.y); //高度设置为屏幕高度的0.5
         window.setAttributes(layoutParams);
-        xiaoqus = new ArrayList<>();
+        xiaoqus = Configs.xiaoQuBeanList;
         bluthAdapter = new XiaoQuAdapter(context, xiaoqus);
         listView.setAdapter(bluthAdapter);
         listView.setOnItemClickListener(this);
@@ -77,11 +78,11 @@ public class XiaoQuDailog extends Dialog implements View.OnClickListener, Adapte
 
             }
         });
-        for (int i = 0; i < 5; i++) {
-            XiaoQuBean xiaoQuBean = new XiaoQuBean();
-            xiaoQuBean.name = "欢腾小区" + i;
-            xiaoqus.add(xiaoQuBean);
-        }
+//        for (int i = 0; i < 5; i++) {
+//            XiaoQuBean xiaoQuBean = new XiaoQuBean();
+//            xiaoQuBean.name = "欢腾小区" + i;
+//            xiaoqus.add(xiaoQuBean);
+//        }
         bluthAdapter.notifyDataSetChanged();
     }
 

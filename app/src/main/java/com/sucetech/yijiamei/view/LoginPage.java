@@ -20,6 +20,7 @@ import com.sucetech.yijiamei.MainActivity;
 import com.sucetech.yijiamei.R;
 import com.sucetech.yijiamei.UserMsg;
 import com.sucetech.yijiamei.model.LaJiBean;
+import com.sucetech.yijiamei.model.XiaoQuBean;
 import com.sucetech.yijiamei.provider.TaskManager;
 
 import org.json.JSONArray;
@@ -120,30 +121,13 @@ public class LoginPage extends BasePage implements OnClickListener {
             if (response.isSuccessful()) {
                 UserMsg.saveToken(response.header("Authorization"));
                 getMeteriType();
-//                loginSucced();
-//                requestYiyuan();
-//                this.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        ((MainActivity)getContext()).hideProgressDailogView();
-//                        mEventManager.notifyObservers(EventStatus.logined,null);
-//                        LoginView.this.setVisibility(View.GONE);
-////                        mEventManager.notifyObservers(EventStatus.logined,null);
-//                        Toast.makeText(getContext(),"chengong -->",Toast.LENGTH_LONG);
-//                    }
-//                });
-//
                 return response.body().string();
             } else {
                 android.util.Log.e("LLL", "shibai--->");
-
-//                loginFail();
-//                Toast.makeText(getContext(),"shibai -->"+response.message(),Toast.LENGTH_LONG);
                 throw new IOException("Unexpected code " + response);
             }
         } catch (IOException e) {
             e.printStackTrace();
-//            loginFail();
         }
         return null;
     }
@@ -161,7 +145,41 @@ public class LoginPage extends BasePage implements OnClickListener {
                 Log.e("LLL", "chenggong--getMeteriType->");
                 List<LaJiBean> data = new Gson().fromJson(response.body().string(), new TypeToken<List<LaJiBean>>() {
                 }.getType());//把JSON字符串转为对象
-                loginSucced(data);
+//                loginSucced(data);
+                getXiaoQu(data);
+            } else {
+                Log.e("LLL", "shibai---requestYiyuan>");
+                throw new IOException("Unexpected code " + response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loginSucced(final List<LaJiBean> data,final List<XiaoQuBean> xiaoQuBeanList) {
+        username.post(new Runnable() {
+            @Override
+            public void run() {
+                FilterObj filterObj=new FilterObj();
+                filterObj.setTag(data);
+                Configs.xiaoQuBeanList=xiaoQuBeanList;
+                mAif.showPage(getMyViewPosition(), Configs.VIEW_POSITION_Main, filterObj);
+            }
+        });
+    }
+    private void getXiaoQu(List<LaJiBean> data){
+        Request request = new Request.Builder()
+                .addHeader("Accept", "application/json")
+                .url(Configs.baseUrl + ":8081/datong/v1/community")
+                .get()
+                .build();
+        try {
+            final Response response = ((MainActivity) context).client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                Log.e("LLL", "chenggong--getMeteriType->");
+                List<XiaoQuBean> xiaoqudata = new Gson().fromJson(response.body().string(), new TypeToken<List<XiaoQuBean>>() {
+                }.getType());//把JSON字符串转为对象
+                loginSucced(data,xiaoqudata);
 
             } else {
                 Log.e("LLL", "shibai---requestYiyuan>");
@@ -172,15 +190,4 @@ public class LoginPage extends BasePage implements OnClickListener {
         }
     }
 
-    private void loginSucced(final List<LaJiBean> data) {
-        username.post(new Runnable() {
-            @Override
-            public void run() {
-                FilterObj filterObj=new FilterObj();
-                filterObj.setTag(data);
-                mAif.showPage(getMyViewPosition(), Configs.VIEW_POSITION_Main, filterObj);
-            }
-        });
-
-    }
 }
