@@ -113,7 +113,7 @@ public class LoginPage extends BasePage implements OnClickListener {
         }
         RequestBody body = RequestBody.create(JSON, String.valueOf(jsonObject));
         Request request = new Request.Builder()
-                .url(Configs.baseUrl + "/api/v1/yijiamei/login")
+                .url(Configs.baseUrl + ":8081/datong/v1/login")
                 .post(body)
                 .build();
         try {
@@ -137,6 +137,7 @@ public class LoginPage extends BasePage implements OnClickListener {
         Request request = new Request.Builder()
                 .addHeader("Accept", "application/json")
                 .url(Configs.baseUrl + ":8081/datong/v1/recycleType")
+                .header("Authorization", UserMsg.getToken())
                 .get()
                 .build();
         try {
@@ -171,6 +172,7 @@ public class LoginPage extends BasePage implements OnClickListener {
         Request request = new Request.Builder()
                 .addHeader("Accept", "application/json")
                 .url(Configs.baseUrl + ":8081/datong/v1/community")
+                .header("Authorization", UserMsg.getToken())
                 .get()
                 .build();
         try {

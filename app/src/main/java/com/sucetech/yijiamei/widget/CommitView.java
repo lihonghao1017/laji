@@ -259,7 +259,7 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
         String url = Configs.baseUrl + ":8081/datong/v1/upload";
         Request request = new Request.Builder()
                 .url(url)
-//                .header("Authorization", UserMsg.getToken())
+                .header("Authorization", UserMsg.getToken())
                 .post(builder.build())
                 .build();
         try {
@@ -302,6 +302,7 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
                 }
             }
 
+            rootJson.put("communityId", homePage.XiaoQuBean.id);
             rootJson.put("description", "diyici");
             rootJson.put("id", 0);
 //            rootJson.put("money", mCommitLajiBean.price != null ? mCommitLajiBean.price : "0");
@@ -322,6 +323,7 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
         RequestBody body = RequestBody.create(JSON, String.valueOf(json));
         Request request = new Request.Builder()
                 .url(Configs.baseUrl + ":8081/datong/v1/recycle")
+                .header("Authorization", UserMsg.getToken())
                 .post(body)
                 .build();
         try {
