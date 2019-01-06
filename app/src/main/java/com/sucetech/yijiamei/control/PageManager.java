@@ -10,6 +10,7 @@ import com.mapbar.android.model.PageObject;
 import com.sucetech.yijiamei.Configs;
 import com.sucetech.yijiamei.R;
 import com.sucetech.yijiamei.view.HomePage;
+import com.sucetech.yijiamei.view.HuiShouiluPage;
 import com.sucetech.yijiamei.view.LoginPage;
 
 public class PageManager
@@ -41,6 +42,12 @@ public class PageManager
 			{
 				view = mInflater.inflate(R.layout.layout_login, null);
 				page = new LoginPage(mContext, view, mActivityInterface);
+				break;
+			}
+			case Configs.VIEW_POSITION_jilu:
+			{
+				view = mInflater.inflate(R.layout.huishoujilu_layout, null);
+				page = new HuiShouiluPage(mContext, view, mActivityInterface);
 				break;
 			}
 //			case Configs.VIEW_POSITION_TWO:

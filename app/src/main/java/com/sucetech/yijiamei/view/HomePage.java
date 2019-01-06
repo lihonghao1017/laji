@@ -63,7 +63,7 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
     public XiaoQuBean XiaoQuBean;
     private View tabwei01, tabwei02,back;
     private TextView wei;
-    private View tabCursor01, tabCursor02;
+    private View tabCursor01, tabCursor02,menuIcon;
     public JuMinBean juMinBean;
     private JuMinDialog juMinDialog;
     private MaoWeiDialog maoWeiDialog;
@@ -104,6 +104,8 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
         wei = view.findViewById(R.id.weiText);
         tabCursor01 = view.findViewById(R.id.tabCursor01);
         tabCursor02 = view.findViewById(R.id.tabCursor02);
+        menuIcon=view.findViewById(R.id.menuIcon);
+        menuIcon.setOnClickListener(this);
         back= view.findViewById(R.id.back);
         back.setOnClickListener(this);
         searchBurron=view.findViewById(R.id.searchBurron);
@@ -173,6 +175,10 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
                     });
 
                 }
+                break;
+            case R.id.menuIcon:
+                mAif.showPage(getMyViewPosition(), Configs.VIEW_POSITION_jilu, null);
+
                 break;
         }
     }

@@ -16,6 +16,7 @@ public class Configs
 	public final static int VIEW_POSITION_NONE = -1;
 	public final static int VIEW_POSITION_Main = 1;
 	public final static int VIEW_POSITION_Login = 2;
+	public final static int VIEW_POSITION_jilu = 4;
 	public final static int VIEW_POSITION_TWO = 3;
 	
 	public final static int REQUEST_CODE_LOGIN = 0x01;
