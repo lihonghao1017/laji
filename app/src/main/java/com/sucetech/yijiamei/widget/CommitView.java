@@ -307,7 +307,7 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
             rootJson.put("id", 0);
 //            rootJson.put("money", mCommitLajiBean.price != null ? mCommitLajiBean.price : "0");
             rootJson.put("recycleTypeId", mCommitLajiBean.laJiBean.id);
-            rootJson.put("residentsId", 1);
+            rootJson.put("residentsId", homePage.juMinBean.id);
 //            rootJson.put("score", mCommitLajiBean.jifen != null ? mCommitLajiBean.jifen : "0");
             rootJson.put("weight", mCommitLajiBean.wei);
             return rootJson;
@@ -337,7 +337,7 @@ public class CommitView extends ScaleLinearLayout implements View.OnClickListene
 
                 Log.e("LLL", "ok--->" + response.body().string());
             } else {
-                Log.e("LLL", "shibai--->");
+                Log.e("LLL", "shibai--->"+response.body().string());
                 throw new IOException("Unexpected code " + response);
             }
         } catch (IOException e) {

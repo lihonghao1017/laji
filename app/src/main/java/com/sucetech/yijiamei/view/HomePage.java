@@ -181,6 +181,7 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
     private void sendData(String phone) {
         Request request = new Request.Builder()
                 .url(Configs.baseUrl + ":8081/datong/v1/residents/cellphone/"+phone)
+                .header("Authorization", UserMsg.getToken())
                 .get()
                 .build();
         try {
@@ -348,6 +349,7 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
     public void getUserMsg(final String cardId){
         Request request = new Request.Builder()
                 .url(Configs.baseUrl + ":8081/datong/v1/residents/"+cardId)
+                .header("Authorization", UserMsg.getToken())
                 .get()
                 .build();
         try {
@@ -359,6 +361,7 @@ public class HomePage extends BasePage implements OnClickListener, BluthConnectT
                     jbean.name=object.optString("name");
                     jbean.phone=object.optString("cellphone");
                     jbean.carNub=cardId;
+                    jbean.id=object.optInt("id");
                     searchOK(jbean);
                 } catch (JSONException e) {
                     searchError();
